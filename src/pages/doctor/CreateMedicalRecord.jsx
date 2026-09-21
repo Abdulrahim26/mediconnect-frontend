@@ -163,7 +163,7 @@ function CreateMedicalRecord() {
   }
 
   return (
-    <div className="min-h-full bg-blue-50/40 p-6 md:p-8">
+    <div className="min-h-full bg-slate-50 p-6 md:p-8">
       <div className="mx-auto max-w-4xl">
 
         {/* HEADER */}
@@ -172,7 +172,7 @@ function CreateMedicalRecord() {
             to="/doctor/medical-records"
             className="text-sm font-semibold text-blue-600 hover:text-blue-700"
           >
-            ← Back to Medical Records
+            â† Back to Medical Records
           </Link>
 
           <h1 className="mt-6 text-3xl font-bold text-slate-900">
@@ -200,7 +200,7 @@ function CreateMedicalRecord() {
         )}
 
         {/* FORM */}
-        <section className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm md:p-8">
+        <section className="rounded-2xl bg-white p-6 shadow-sm md:p-8">
 
           <form onSubmit={handleSubmit}>
 
@@ -215,7 +215,7 @@ function CreateMedicalRecord() {
               </label>
 
               {loadingAppointments ? (
-                <div className="rounded-lg border border-blue-100 bg-blue-50 px-4 py-3 text-slate-600">
+                <div className="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-slate-600">
                   Loading completed appointments...
                 </div>
               ) : appointments.length === 0 ? (
@@ -246,7 +246,7 @@ function CreateMedicalRecord() {
                     value={form.appointmentId}
                     onChange={handleChange}
                     required
-                    className="w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+                    className="w-full rounded-lg border border-slate-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100"
                   >
                     <option value="">
                       Select a completed appointment
@@ -260,7 +260,7 @@ function CreateMedicalRecord() {
                         >
                           {appointment.patientName ||
                             'Patient'}{' '}
-                          —{' '}
+                          â€”{' '}
                           {appointment.appointmentDate}{' '}
                           at{' '}
                           {appointment.appointmentTime}
@@ -296,7 +296,7 @@ function CreateMedicalRecord() {
                 required
                 rows="4"
                 placeholder="Enter the patient's diagnosis..."
-                className="w-full rounded-lg border border-blue-200 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               />
 
             </div>
@@ -318,7 +318,7 @@ function CreateMedicalRecord() {
                 onChange={handleChange}
                 rows="4"
                 placeholder="Describe the patient's symptoms..."
-                className="w-full rounded-lg border border-blue-200 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               />
 
             </div>
@@ -340,7 +340,7 @@ function CreateMedicalRecord() {
                 onChange={handleChange}
                 rows="4"
                 placeholder="Describe the recommended treatment..."
-                className="w-full rounded-lg border border-blue-200 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               />
 
             </div>
@@ -362,7 +362,7 @@ function CreateMedicalRecord() {
                 onChange={handleChange}
                 rows="4"
                 placeholder="Enter prescribed medication or instructions..."
-                className="w-full rounded-lg border border-blue-200 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               />
 
             </div>
@@ -384,7 +384,7 @@ function CreateMedicalRecord() {
                 onChange={handleChange}
                 rows="5"
                 placeholder="Add any additional clinical notes..."
-                className="w-full rounded-lg border border-blue-200 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 text-slate-900 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               />
 
             </div>
@@ -394,7 +394,7 @@ function CreateMedicalRecord() {
 
               <Link
                 to="/doctor/medical-records"
-                className="rounded-lg bg-blue-50 px-6 py-3 text-center font-semibold text-blue-700 hover:bg-blue-100"
+                className="rounded-lg bg-slate-200 px-6 py-3 text-center font-semibold text-slate-700 hover:bg-slate-300"
               >
                 Cancel
               </Link>

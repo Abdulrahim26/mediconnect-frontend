@@ -12,7 +12,6 @@ function Login() {
     password: '',
   })
 
-  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -70,14 +69,13 @@ function Login() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-blue-50/40 px-4">
-      <section className="mx-auto w-full max-w-md rounded-2xl border border-blue-100 bg-white p-8 shadow-lg">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <section
+        className="w-full max-w-md mx-auto rounded-2xl bg-white p-8 shadow-lg"
+        style={{ maxWidth: '420px' }}
+      >
         <div className="mb-8 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-xl text-blue-700">
-            ✦
-          </div>
-
-          <h1 className="mt-4 text-3xl font-bold text-slate-900">
+          <h1 className="text-3xl font-bold text-slate-900">
             MediConnect
           </h1>
 
@@ -87,7 +85,7 @@ function Login() {
         </div>
 
         {error && (
-          <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-700">
             {error}
           </div>
         )}
@@ -109,7 +107,7 @@ function Login() {
               onChange={handleChange}
               required
               placeholder="Enter your email"
-              className="w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
           </div>
 
@@ -121,33 +119,16 @@ function Login() {
               Password
             </label>
 
-            <div className="relative">
-              <input
-                id="password"
-                name="password"
-                type={showPassword ? 'text' : 'password'}
-                value={formData.password}
-                onChange={handleChange}
-                required
-                placeholder="Enter your password"
-                className="w-full rounded-lg border border-blue-200 bg-white px-4 py-3 pr-12 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-              />
-
-              <button
-                type="button"
-                onClick={() =>
-                  setShowPassword((previous) => !previous)
-                }
-                aria-label={
-                  showPassword
-                    ? 'Hide password'
-                    : 'Show password'
-                }
-                className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 transition hover:text-blue-600"
-              >
-                {showPassword ? '🙈' : '👁'}
-              </button>
-            </div>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              placeholder="Enter your password"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            />
 
             <div className="mt-2 text-right">
               <Link
@@ -168,7 +149,7 @@ function Login() {
           </button>
         </form>
 
-        <div className="mt-6 border-t border-blue-100 pt-5 text-center">
+        <div className="mt-6 text-center">
           <p className="text-sm text-slate-600">
             Don't have an account?{' '}
             <Link

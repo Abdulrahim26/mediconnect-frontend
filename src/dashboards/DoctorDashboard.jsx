@@ -8,417 +8,290 @@ function DoctorDashboard() {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    fetchAppointments()
+    const loadAppointments = async () => {
+      try {
+        setLoading(true)
+
+        const response = await api.get('/appointments/doctor')
+
+        setAppointments(response.data || [])
+      } catch (error) {
+        console.error('Doctor appointments error:', error)
+
+        if (error.response?.status === 401) {
+          setError(
+            'Your session has expired. Please log in again.',
+          )
+        } else if (error.response?.status === 403) {
+          setError(
+            'You do not have permission to view these appointments.',
+          )
+        } else {
+          setError('Unable to load appointments.')
+        }
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadAppointments()
   }, [])
 
-  const fetchAppointments = async () => {
-    try {
-      setLoading(true)
-      setError('')
-
-      const response = await api.get('/appointments/doctor')
-
-      setAppointments(response.data || [])
-    } catch (err) {
-      console.error('Error fetching doctor appointments:', err)
-
-      if (err.response?.status === 401) {
-        setError(
-          'Your session has expired. Please log in again.',
-        )
-      } else if (err.response?.status === 403) {
-        setError(
-          'You do not have permission to view your appointments.',
-        )
-      } else if (err.response?.data?.message) {
-        setError(err.response.data.message)
-      } else {
-        setError('Unable to load your appointments.')
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const today = new Date()
-  const todayString = today.toISOString().split('T')[0]
-
-  const todayAppointments = appointments.filter((appointment) => {
-    if (!appointment.appointmentDate) {
-      return false
-    }
-
-    return appointment.appointmentDate === todayString
-  })
-
   const pendingAppointments = appointments.filter(
-    (appointment) =>
-      appointment.status?.toUpperCase() === 'PENDING',
+    (appointment) => appointment.status === 'PENDING',
+  )
+
+  const approvedAppointments = appointments.filter(
+    (appointment) => appointment.status === 'APPROVED',
+  )
+
+  const checkedInAppointments = appointments.filter(
+    (appointment) => appointment.status === 'CHECKED_IN',
   )
 
   const completedAppointments = appointments.filter(
-    (appointment) =>
-      appointment.status?.toUpperCase() === 'COMPLETED',
+    (appointment) => appointment.status === 'COMPLETED',
   )
 
-  const waitingAppointments = appointments.filter(
-    (appointment) =>
-      appointment.status?.toUpperCase() === 'CHECKED_IN' ||
-      appointment.status?.toUpperCase() === 'WAITING',
-  )
-
-  const getPatientName = (appointment) => {
-    if (appointment.patientName) {
-      return appointment.patientName
-    }
-
-    if (appointment.patient?.fullName) {
-      return appointment.patient.fullName
-    }
-
-    if (
-      appointment.patient?.firstName ||
-      appointment.patient?.lastName
-    ) {
-      return `${appointment.patient.firstName || ''} ${
-        appointment.patient.lastName || ''
-      }`.trim()
-    }
-
-    return 'Patient'
-  }
-
-  const formatStatus = (status) => {
-    if (!status) {
-      return 'Unknown'
-    }
-
-    return status
-      .toString()
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, (character) => character.toUpperCase())
-  }
-
-  const getStatusClasses = (status) => {
-    switch (status?.toUpperCase()) {
-      case 'PENDING':
-        return 'bg-amber-50 text-amber-700'
-
-      case 'APPROVED':
-        return 'bg-blue-50 text-blue-700'
-
-      case 'CHECKED_IN':
-      case 'WAITING':
-        return 'bg-indigo-50 text-indigo-700'
-
-      case 'COMPLETED':
-        return 'bg-green-50 text-green-700'
-
-      case 'CANCELLED':
-      case 'CANCELED':
-      case 'REJECTED':
-        return 'bg-red-50 text-red-700'
-
-      default:
-        return 'bg-slate-100 text-slate-600'
-    }
+  if (loading) {
+    return (
+      <div className="flex min-h-full items-center justify-center p-6 bg-slate-50">
+        <p className="text-lg text-slate-600">
+          Loading doctor dashboard...
+        </p>
+      </div>
+    )
   }
 
   return (
-    <div className="min-h-full bg-blue-50/40 p-4 sm:p-6 md:p-8">
+    <div className="min-h-full bg-slate-50 p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
-        {/* HEADER */}
 
         <header className="mb-8">
-          <p className="text-sm font-semibold text-blue-600">
-            MediConnect
-          </p>
-
-          <h1 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+          <h1 className="text-3xl font-bold text-slate-900">
             Doctor Dashboard
           </h1>
 
-          <p className="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
-            Manage your appointments, patient queue, and clinical
-            activities.
+          <p className="mt-2 text-slate-600">
+            Manage appointments, patient waiting queues, and medical records.
           </p>
         </header>
 
-        {/* ERROR */}
-
         {error && (
-          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
             {error}
           </div>
         )}
 
-        {/* STATISTICS */}
+        <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
 
-        <section className="mb-8">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-slate-500">
-                    Today's Appointments
-                  </p>
-
-                  <p className="mt-2 text-3xl font-bold text-slate-900">
-                    {loading ? '—' : todayAppointments.length}
-                  </p>
-                </div>
-
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-lg text-blue-700">
-                  ▣
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-slate-500">
-                    Pending
-                  </p>
-
-                  <p className="mt-2 text-3xl font-bold text-slate-900">
-                    {loading ? '—' : pendingAppointments.length}
-                  </p>
-                </div>
-
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-lg text-amber-700">
-                  ◷
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-slate-500">
-                    Waiting Queue
-                  </p>
-
-                  <p className="mt-2 text-3xl font-bold text-slate-900">
-                    {loading ? '—' : waitingAppointments.length}
-                  </p>
-                </div>
-
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-50 text-lg text-indigo-700">
-                  ☷
-                </div>
-              </div>
-            </div>
-
-            <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-sm font-medium text-slate-500">
-                    Completed
-                  </p>
-
-                  <p className="mt-2 text-3xl font-bold text-slate-900">
-                    {loading ? '—' : completedAppointments.length}
-                  </p>
-                </div>
-
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-green-50 text-lg text-green-700">
-                  ✓
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* QUICK ACTIONS */}
-
-        <section className="mb-8">
-          <div className="mb-4">
-            <h2 className="text-xl font-semibold text-slate-900">
-              Quick Actions
+          <Link
+            to="/doctor/appointments"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-slate-200 hover:shadow-md"
+          >
+            <h2 className="text-lg font-bold text-slate-900">
+              Manage Appointments
             </h2>
 
-            <p className="mt-1 text-sm text-slate-500">
-              Access your most frequently used clinical tools.
+            <p className="mt-2 text-sm text-slate-600">
+              Approve, reject, and complete patient appointments.
             </p>
+          </Link>
+
+          <Link
+            to="/doctor/waiting"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-slate-200 hover:shadow-md"
+          >
+            <h2 className="text-lg font-bold text-slate-900">
+              Waiting Queue
+            </h2>
+
+            <p className="mt-2 text-sm text-slate-600">
+              View patients who have checked in and are waiting.
+            </p>
+          </Link>
+
+          <Link
+            to="/doctor/medical-records"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-slate-200 hover:shadow-md"
+          >
+            <h2 className="text-lg font-bold text-slate-900">
+              Medical Records
+            </h2>
+
+            <p className="mt-2 text-sm text-slate-600">
+              View, create, and manage medical records for your patients.
+            </p>
+          </Link>
+
+          <Link
+            to="/doctor/profile"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-slate-200 hover:shadow-md"
+          >
+            <h2 className="text-lg font-bold text-slate-900">
+              My Profile
+            </h2>
+
+            <p className="mt-2 text-sm text-slate-600">
+              View and update your professional profile.
+            </p>
+          </Link>
+
+        </div>
+
+        <section className="mb-8">
+
+          <h2 className="mb-4 text-xl font-semibold text-slate-900">
+            Appointment Overview
+          </h2>
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-5">
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm font-medium text-slate-500">
+                Total
+              </p>
+
+              <p className="mt-3 text-3xl font-bold text-slate-900">
+                {appointments.length}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm font-medium text-slate-500">
+                Pending
+              </p>
+
+              <p className="mt-3 text-3xl font-bold text-amber-600">
+                {pendingAppointments.length}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm font-medium text-slate-500">
+                Approved
+              </p>
+
+              <p className="mt-3 text-3xl font-bold text-blue-600">
+                {approvedAppointments.length}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm font-medium text-slate-500">
+                Checked In
+              </p>
+
+              <p className="mt-3 text-3xl font-bold text-purple-600">
+                {checkedInAppointments.length}
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+              <p className="text-sm font-medium text-slate-500">
+                Completed
+              </p>
+
+              <p className="mt-3 text-3xl font-bold text-green-600">
+                {completedAppointments.length}
+              </p>
+            </div>
+
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <Link
-              to="/doctor/appointments"
-              className="group rounded-2xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
-            >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-lg text-blue-700">
-                ▣
-              </div>
-
-              <h3 className="mt-4 text-lg font-semibold text-slate-900">
-                Manage Appointments
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Review, approve, reject, and complete patient
-                appointments.
-              </p>
-
-              <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                View appointments →
-              </p>
-            </Link>
-
-            <Link
-              to="/doctor/waiting-queue"
-              className="group rounded-2xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
-            >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-lg text-blue-700">
-                ☷
-              </div>
-
-              <h3 className="mt-4 text-lg font-semibold text-slate-900">
-                Waiting Queue
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                View patients currently waiting for consultation.
-              </p>
-
-              <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Open waiting queue →
-              </p>
-            </Link>
-
-            <Link
-              to="/doctor/medical-records"
-              className="group rounded-2xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
-            >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-lg text-blue-700">
-                ▤
-              </div>
-
-              <h3 className="mt-4 text-lg font-semibold text-slate-900">
-                Medical Records
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-slate-600">
-                Create, review, and manage patient medical records.
-              </p>
-
-              <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Manage records →
-              </p>
-            </Link>
-          </div>
         </section>
 
-        {/* TODAY'S APPOINTMENTS */}
+        <section className="rounded-2xl bg-white p-6 shadow-sm">
 
-        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
-          <div className="flex flex-col gap-3 border-b border-blue-100 bg-white p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
-            <div>
-              <h2 className="text-xl font-semibold text-slate-900">
-                Today's Appointments
-              </h2>
+          <h2 className="mb-6 text-xl font-semibold text-slate-900">
+            My Appointments
+          </h2>
 
-              <p className="mt-1 text-sm text-slate-500">
-                Review your scheduled appointments for today.
+          {appointments.length === 0 ? (
+
+            <div className="rounded-xl bg-slate-50 p-8 text-center">
+              <p className="text-slate-600">
+                No appointments found.
               </p>
             </div>
 
-            <Link
-              to="/doctor/appointments"
-              className="text-sm font-semibold text-blue-600 hover:text-blue-700"
-            >
-              View all →
-            </Link>
-          </div>
-
-          {loading ? (
-            <div className="flex flex-col items-center justify-center p-10">
-              <div className="mb-4 h-9 w-9 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
-
-              <p className="text-sm text-slate-500">
-                Loading appointments...
-              </p>
-            </div>
-          ) : todayAppointments.length === 0 ? (
-            <div className="p-10 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-lg text-blue-600">
-                ▣
-              </div>
-
-              <h3 className="mt-4 text-base font-semibold text-slate-900">
-                No appointments today
-              </h3>
-
-              <p className="mt-1 text-sm text-slate-500">
-                You currently have no appointments scheduled for today.
-              </p>
-            </div>
           ) : (
+
             <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead className="border-b border-blue-100 bg-blue-50/50">
-                  <tr>
-                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+
+              <table className="w-full text-left">
+
+                <thead>
+                  <tr className="border-b border-slate-200">
+
+                    <th className="px-4 py-3 text-sm font-semibold text-slate-600">
                       Patient
                     </th>
 
-                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <th className="px-4 py-3 text-sm font-semibold text-slate-600">
                       Date
                     </th>
 
-                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <th className="px-4 py-3 text-sm font-semibold text-slate-600">
                       Time
                     </th>
 
-                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <th className="px-4 py-3 text-sm font-semibold text-slate-600">
                       Reason
                     </th>
 
-                    <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                    <th className="px-4 py-3 text-sm font-semibold text-slate-600">
                       Status
                     </th>
+
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-slate-100">
-                  {todayAppointments.map((appointment) => (
+                <tbody>
+
+                  {appointments.map((appointment) => (
+
                     <tr
                       key={appointment.id}
-                      className="transition hover:bg-blue-50/40"
+                      className="border-b border-slate-100"
                     >
-                      <td className="px-5 py-4 text-sm font-medium text-slate-900">
-                        {getPatientName(appointment)}
+
+                      <td className="px-4 py-4 font-medium text-slate-900">
+                        {appointment.patientName || 'â€”'}
                       </td>
 
-                      <td className="px-5 py-4 text-sm text-slate-600">
-                        {appointment.appointmentDate || '—'}
+                      <td className="px-4 py-4 text-slate-600">
+                        {appointment.appointmentDate || 'â€”'}
                       </td>
 
-                      <td className="px-5 py-4 text-sm text-slate-600">
-                        {appointment.appointmentTime || '—'}
+                      <td className="px-4 py-4 text-slate-600">
+                        {appointment.appointmentTime || 'â€”'}
                       </td>
 
-                      <td className="max-w-xs px-5 py-4 text-sm text-slate-600">
-                        {appointment.reason || '—'}
+                      <td className="px-4 py-4 text-slate-600">
+                        {appointment.reason || 'â€”'}
                       </td>
 
-                      <td className="px-5 py-4">
-                        <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getStatusClasses(
-                            appointment.status,
-                          )}`}
-                        >
-                          {formatStatus(appointment.status)}
+                      <td className="px-4 py-4">
+                        <span className="rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-700">
+                          {appointment.status}
                         </span>
                       </td>
+
                     </tr>
+
                   ))}
+
                 </tbody>
+
               </table>
+
             </div>
+
           )}
+
         </section>
+
       </div>
     </div>
   )

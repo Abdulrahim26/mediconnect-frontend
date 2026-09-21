@@ -11,9 +11,6 @@ function ResetPassword() {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -26,21 +23,21 @@ function ResetPassword() {
 
     if (!token) {
       setError(
-        'This password reset link is invalid or missing.',
+        'This password reset link is invalid or missing.'
       )
       return
     }
 
     if (password.length < 8) {
       setError(
-        'Password must be at least 8 characters.',
+        'Password must be at least 8 characters.'
       )
       return
     }
 
     if (password !== confirmPassword) {
       setError(
-        'Passwords do not match.',
+        'Passwords do not match.'
       )
       return
     }
@@ -53,7 +50,7 @@ function ResetPassword() {
         {
           token,
           password,
-        },
+        }
       )
 
       setMessage(response.data)
@@ -64,19 +61,20 @@ function ResetPassword() {
       setTimeout(() => {
         navigate('/login')
       }, 2000)
+
     } catch (error) {
       console.error(
         'Reset password error:',
-        error,
+        error
       )
 
       if (error.response?.data?.message) {
         setError(
-          error.response.data.message,
+          error.response.data.message
         )
       } else {
         setError(
-          'Unable to reset your password. The link may be invalid or expired.',
+          'Unable to reset your password. The link may be invalid or expired.'
         )
       }
     } finally {
@@ -85,8 +83,9 @@ function ResetPassword() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-blue-50/40 px-4">
-      <section className="w-full max-w-md rounded-2xl border border-blue-100 bg-white p-8 shadow-lg">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <section className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-slate-900">
             MediConnect
@@ -102,13 +101,13 @@ function ResetPassword() {
         </div>
 
         {message && (
-          <div className="mb-5 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+          <div className="mb-5 rounded-lg bg-green-50 p-3 text-sm text-green-700">
             {message}
           </div>
         )}
 
         {error && (
-          <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-700">
             {error}
           </div>
         )}
@@ -118,6 +117,7 @@ function ResetPassword() {
             onSubmit={handleSubmit}
             className="space-y-5"
           >
+
             <div>
               <label
                 htmlFor="password"
@@ -126,36 +126,19 @@ function ResetPassword() {
                 New Password
               </label>
 
-              <div className="relative">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(event) =>
-                    setPassword(event.target.value)
-                  }
-                  required
-                  minLength={8}
-                  placeholder="Enter your new password"
-                  className="w-full rounded-lg border border-blue-200 bg-white px-4 py-3 pr-12 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                />
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowPassword((previous) => !previous)
-                  }
-                  aria-label={
-                    showPassword
-                      ? 'Hide password'
-                      : 'Show password'
-                  }
-                  className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 transition hover:text-blue-600"
-                >
-                  {showPassword ? '🙈' : '👁'}
-                </button>
-              </div>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                value={password}
+                onChange={(event) =>
+                  setPassword(event.target.value)
+                }
+                required
+                minLength={8}
+                placeholder="Enter your new password"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              />
             </div>
 
             <div>
@@ -166,42 +149,19 @@ function ResetPassword() {
                 Confirm Password
               </label>
 
-              <div className="relative">
-                <input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={
-                    showConfirmPassword
-                      ? 'text'
-                      : 'password'
-                  }
-                  value={confirmPassword}
-                  onChange={(event) =>
-                    setConfirmPassword(event.target.value)
-                  }
-                  required
-                  minLength={8}
-                  placeholder="Confirm your new password"
-                  className="w-full rounded-lg border border-blue-200 bg-white px-4 py-3 pr-12 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                />
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setShowConfirmPassword(
-                      (previous) => !previous,
-                    )
-                  }
-                  aria-label={
-                    showConfirmPassword
-                      ? 'Hide confirm password'
-                      : 'Show confirm password'
-                  }
-                  className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 transition hover:text-blue-600"
-                >
-                  {showConfirmPassword ? '🙈' : '👁'}
-                </button>
-              </div>
+              <input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                value={confirmPassword}
+                onChange={(event) =>
+                  setConfirmPassword(event.target.value)
+                }
+                required
+                minLength={8}
+                placeholder="Confirm your new password"
+                className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              />
             </div>
 
             <button
@@ -213,6 +173,7 @@ function ResetPassword() {
                 ? 'Resetting Password...'
                 : 'Reset Password'}
             </button>
+
           </form>
         )}
 
@@ -223,15 +184,16 @@ function ResetPassword() {
         )}
 
         {!message && (
-          <div className="mt-6 border-t border-blue-100 pt-5 text-center">
+          <div className="mt-6 text-center">
             <Link
               to="/login"
               className="text-sm font-medium text-blue-600 hover:text-blue-700"
             >
-              ← Back to Sign In
+              Back to Sign In
             </Link>
           </div>
         )}
+
       </section>
     </main>
   )

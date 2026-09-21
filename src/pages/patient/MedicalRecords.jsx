@@ -41,7 +41,7 @@ function MedicalRecords() {
 
   const formatDate = (dateTime) => {
     if (!dateTime) {
-      return '—'
+      return 'â€”'
     }
 
     const date = new Date(dateTime)
@@ -55,7 +55,7 @@ function MedicalRecords() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50">
+      <div className="flex min-h-screen items-center justify-center bg-slate-100">
         <p className="text-lg text-slate-600">
           Loading medical records...
         </p>
@@ -65,9 +65,9 @@ function MedicalRecords() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50/40 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
 
-        <section className="w-full max-w-lg rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-lg">
+        <section className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-lg">
 
           <h1 className="text-2xl font-bold text-red-600">
             Medical Records Error
@@ -108,7 +108,7 @@ function MedicalRecords() {
         {/* SUMMARY */}
         <section className="mb-8 grid gap-5 md:grid-cols-3">
 
-          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
             <p className="text-sm font-medium text-slate-500">
               Total Records
@@ -120,7 +120,7 @@ function MedicalRecords() {
 
           </div>
 
-          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
             <p className="text-sm font-medium text-slate-500">
               Medical History
@@ -134,7 +134,7 @@ function MedicalRecords() {
 
           </div>
 
-          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
             <p className="text-sm font-medium text-slate-500">
               Latest Record
@@ -151,9 +151,9 @@ function MedicalRecords() {
         </section>
 
         {/* MEDICAL HISTORY */}
-        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-          <div className="border-b border-blue-100 p-6">
+          <div className="border-b border-slate-200 p-6">
 
             <h2 className="text-xl font-semibold text-slate-900">
               Medical History
@@ -193,7 +193,7 @@ function MedicalRecords() {
 
               <table className="min-w-full">
 
-                <thead className="bg-blue-50">
+                <thead className="bg-slate-50">
 
                   <tr>
 
@@ -221,13 +221,13 @@ function MedicalRecords() {
 
                 </thead>
 
-                <tbody className="divide-y divide-blue-100">
+                <tbody className="divide-y divide-slate-200">
 
                   {records.map((record) => (
 
                     <tr
                       key={record.id}
-                      className="hover:bg-blue-50/60"
+                      className="hover:bg-slate-50"
                     >
 
                       {/* DOCTOR */}
@@ -242,7 +242,7 @@ function MedicalRecords() {
                         </p>
 
                         <p className="text-xs text-slate-500">
-                          {record.appointmentId || '—'}
+                          {record.appointmentId || 'â€”'}
                         </p>
 
                       </td>
@@ -251,7 +251,7 @@ function MedicalRecords() {
                       <td className="max-w-xs px-6 py-5">
 
                         <p className="font-medium text-slate-900">
-                          {record.diagnosis || '—'}
+                          {record.diagnosis || 'â€”'}
                         </p>
 
                         {record.symptoms && (

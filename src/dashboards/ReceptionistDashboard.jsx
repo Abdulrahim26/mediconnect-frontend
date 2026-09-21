@@ -61,7 +61,9 @@ function ReceptionistDashboard() {
       setAppointmentsLoading(true)
       setAppointmentError('')
 
-      const response = await api.get('/appointments/hospital')
+      const response = await api.get(
+        '/receptionist/appointments',
+      )
 
       setAppointments(response.data || [])
     } catch (error) {
@@ -300,7 +302,7 @@ function ReceptionistDashboard() {
           </h1>
 
           <p className="mt-2 text-slate-600">
-            {dashboard?.hospitalName || 'Hospital'} · Search, filter and check in patients.
+            {dashboard?.hospitalName || 'Hospital'} Â· Search, filter and check in patients.
           </p>
         </section>
 
@@ -581,19 +583,19 @@ function ReceptionistDashboard() {
                       >
 
                         <td className="px-4 py-4 font-medium text-slate-900">
-                          {appointment.patientName || '—'}
+                          {appointment.patientName || 'â€”'}
                         </td>
 
                         <td className="px-4 py-4 text-slate-600">
-                          {appointment.doctorName || '—'}
+                          {appointment.doctorName || 'â€”'}
                         </td>
 
                         <td className="px-4 py-4 text-slate-600">
-                          {appointment.appointmentDate || '—'}
+                          {appointment.appointmentDate || 'â€”'}
                         </td>
 
                         <td className="px-4 py-4 text-slate-600">
-                          {appointment.appointmentTime || '—'}
+                          {appointment.appointmentTime || 'â€”'}
                         </td>
 
                         <td className="px-4 py-4">
@@ -620,7 +622,7 @@ function ReceptionistDashboard() {
                         </td>
 
                         <td className="max-w-xs px-4 py-4 text-slate-600">
-                          {appointment.reason || '—'}
+                          {appointment.reason || 'â€”'}
                         </td>
 
                         <td className="px-4 py-4">
@@ -655,7 +657,7 @@ function ReceptionistDashboard() {
                             </span>
                           ) : (
                             <span className="text-sm text-slate-400">
-                              —
+                              â€”
                             </span>
                           )}
 

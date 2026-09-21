@@ -2,33 +2,46 @@
 import { useAuth } from '../auth/useAuth'
 
 function ProtectedRoute({ children, allowedRoles }) {
-  const { isAuthenticated, role, isLoading } = useAuth()
+  const {
+    isAuthenticated,
+    role,
+    isLoading,
+  } = useAuth()
+
+  // ======================================================
+  // WAIT FOR AUTHENTICATION RESTORATION
+  // ======================================================
 
   if (isLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50 px-4">
-        <div className="w-full max-w-sm rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-sm">
-          <div className="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-full bg-blue-100">
-            <div className="h-7 w-7 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
-          </div>
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
 
-          <h1 className="text-lg font-bold text-slate-900">
-            MediConnect
-          </h1>
-
-          <p className="mt-2 text-sm font-medium text-slate-500">
-            Loading your account...
+          <p className="text-sm font-medium text-slate-600">
+            Loading MediConnect...
           </p>
         </div>
       </div>
     )
   }
 
+  // ======================================================
+  // NOT AUTHENTICATED
+  // ======================================================
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />
   }
 
-  if (allowedRoles && !allowedRoles.includes(role)) {
+  // ======================================================
+  // WRONG ROLE
+  // ======================================================
+
+  if (
+    allowedRoles &&
+    !allowedRoles.includes(role)
+  ) {
     return <Navigate to="/unauthorized" replace />
   }
 
@@ -36,3 +49,5 @@ function ProtectedRoute({ children, allowedRoles }) {
 }
 
 export default ProtectedRoute
+
+

@@ -23,8 +23,6 @@ function Doctors() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
 
-  const [showPassword, setShowPassword] = useState(false)
-
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
 
@@ -95,7 +93,6 @@ function Doctors() {
   const resetForm = () => {
     setForm(emptyForm)
     setEditingId(null)
-    setShowPassword(false)
     setError('')
     setSuccess('')
   }
@@ -134,7 +131,6 @@ function Doctors() {
 
       setForm(emptyForm)
       setEditingId(null)
-      setShowPassword(false)
 
       await loadDoctors()
     } catch (error) {
@@ -175,7 +171,6 @@ function Doctors() {
       password: '',
     })
 
-    setShowPassword(false)
     setSuccess('')
     setError('')
   }
@@ -219,7 +214,7 @@ function Doctors() {
   }
 
   return (
-    <main className="min-h-screen bg-blue-50/40 p-6 md:p-8">
+    <main className="min-h-screen bg-slate-50 p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
 
         {/* PAGE TITLE */}
@@ -239,20 +234,20 @@ function Doctors() {
         </div>
 
         {error && (
-          <div className="mb-5 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+          <div className="mb-5 rounded-xl bg-red-50 p-4 text-red-700">
             {error}
           </div>
         )}
 
         {success && (
-          <div className="mb-5 rounded-xl border border-green-200 bg-green-50 p-4 text-green-700">
+          <div className="mb-5 rounded-xl bg-green-50 p-4 text-green-700">
             {success}
           </div>
         )}
 
         {/* DOCTOR FORM */}
 
-        <section className="mb-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
 
           <h2 className="mb-6 text-xl font-semibold text-slate-900">
             {editingId
@@ -272,7 +267,7 @@ function Doctors() {
                 placeholder="First name"
                 required
                 disabled={saving}
-                className="rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
+                className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
               />
 
               <input
@@ -283,7 +278,7 @@ function Doctors() {
                 placeholder="Last name"
                 required
                 disabled={saving}
-                className="rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
+                className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
               />
 
               <input
@@ -294,7 +289,7 @@ function Doctors() {
                 placeholder="Specialty"
                 required
                 disabled={saving}
-                className="rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
+                className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
               />
 
               <input
@@ -304,7 +299,7 @@ function Doctors() {
                 onChange={handleChange}
                 placeholder="Qualification"
                 disabled={saving}
-                className="rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
+                className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
               />
 
               <input
@@ -314,7 +309,7 @@ function Doctors() {
                 onChange={handleChange}
                 placeholder="Phone"
                 disabled={saving}
-                className="rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
+                className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
               />
 
               <input
@@ -325,7 +320,7 @@ function Doctors() {
                 placeholder="Email"
                 required
                 disabled={Boolean(editingId) || saving}
-                className="rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
+                className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
               />
 
               <input
@@ -337,7 +332,7 @@ function Doctors() {
                 min="0"
                 step="0.01"
                 disabled={saving}
-                className="rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
+                className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
               />
 
               <select
@@ -346,7 +341,7 @@ function Doctors() {
                 onChange={handleChange}
                 required
                 disabled={saving}
-                className="rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
+                className="rounded-lg border border-slate-200 bg-white px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
               >
                 <option value="">
                   Select department
@@ -363,39 +358,16 @@ function Doctors() {
               </select>
 
               {!editingId && (
-                <div className="relative">
-                  <input
-                    type={
-                      showPassword
-                        ? 'text'
-                        : 'password'
-                    }
-                    name="password"
-                    value={form.password}
-                    onChange={handleChange}
-                    placeholder="Doctor login password"
-                    required
-                    disabled={saving}
-                    className="w-full rounded-lg border border-blue-200 bg-white px-4 py-3 pr-12 text-slate-900 outline-none placeholder:text-slate-400 focus:border-blue-600 focus:ring-2 focus:ring-blue-100 disabled:bg-blue-50"
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setShowPassword(
-                        (previous) => !previous,
-                      )
-                    }
-                    aria-label={
-                      showPassword
-                        ? 'Hide password'
-                        : 'Show password'
-                    }
-                    className="absolute inset-y-0 right-0 flex items-center px-4 text-slate-500 transition hover:text-blue-600"
-                  >
-                    {showPassword ? '🙈' : '👁'}
-                  </button>
-                </div>
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder="Doctor login password"
+                  required
+                  disabled={saving}
+                  className="rounded-lg border border-slate-200 px-4 py-3 outline-none focus:border-blue-600 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50"
+                />
               )}
 
             </div>
@@ -419,7 +391,7 @@ function Doctors() {
                   type="button"
                   onClick={resetForm}
                   disabled={saving}
-                  className="rounded-lg border border-blue-200 bg-white px-5 py-3 font-semibold text-slate-700 hover:bg-blue-50 disabled:opacity-50"
+                  className="rounded-lg bg-slate-50 px-5 py-3 font-semibold text-blue-700 hover:bg-slate-100 disabled:opacity-50"
                 >
                   Cancel
                 </button>
@@ -432,9 +404,9 @@ function Doctors() {
 
         {/* DOCTOR LIST */}
 
-        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+        <section className="overflow-hidden rounded-2xl bg-white shadow-sm">
 
-          <div className="border-b border-blue-100 p-6">
+          <div className="border-b border-slate-200 p-6">
             <h2 className="text-xl font-semibold text-slate-900">
               Hospital Doctors
             </h2>
@@ -458,7 +430,7 @@ function Doctors() {
 
               <table className="min-w-full">
 
-                <thead className="bg-blue-50">
+                <thead className="bg-slate-50">
                   <tr>
 
                     <th className="px-6 py-4 text-left text-sm font-semibold text-slate-600">
@@ -488,12 +460,12 @@ function Doctors() {
                   </tr>
                 </thead>
 
-                <tbody className="divide-y divide-blue-100">
+                <tbody className="divide-y divide-slate-200">
 
                   {doctors.map((doctor) => (
                     <tr
                       key={doctor.id}
-                      className="hover:bg-blue-50/50"
+                      className="hover:bg-slate-50"
                     >
 
                       <td className="px-6 py-4 font-medium text-slate-900">
@@ -502,19 +474,19 @@ function Doctors() {
                       </td>
 
                       <td className="px-6 py-4 text-slate-600">
-                        {doctor.specialty || '—'}
+                        {doctor.specialty || 'â€”'}
                       </td>
 
                       <td className="px-6 py-4 text-slate-600">
-                        {doctor.departmentName || '—'}
+                        {doctor.departmentName || 'â€”'}
                       </td>
 
                       <td className="px-6 py-4 text-slate-600">
-                        {doctor.phone || '—'}
+                        {doctor.phone || 'â€”'}
                       </td>
 
                       <td className="px-6 py-4 text-slate-600">
-                        {doctor.consultationFee ?? '—'}
+                        {doctor.consultationFee ?? 'â€”'}
                       </td>
 
                       <td className="px-6 py-4">

@@ -65,7 +65,7 @@ function MedicalRecordDetails() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50">
+      <div className="flex min-h-screen items-center justify-center bg-slate-100">
         <p className="text-lg text-slate-600">
           Loading medical record...
         </p>
@@ -75,9 +75,9 @@ function MedicalRecordDetails() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50/40 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
 
-        <section className="w-full max-w-lg rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-lg">
+        <section className="w-full max-w-lg rounded-2xl border border-slate-200 bg-white p-8 text-center shadow-lg">
 
           <h1 className="text-2xl font-bold text-red-600">
             Unable to Load Record
@@ -116,7 +116,7 @@ function MedicalRecordDetails() {
   }
 
   return (
-    <div className="min-h-full bg-blue-50/40 p-6 md:p-8">
+    <div className="min-h-full bg-slate-50 p-6 md:p-8">
       <div className="mx-auto max-w-5xl">
 
         {/* HEADER */}
@@ -131,7 +131,7 @@ function MedicalRecordDetails() {
         </header>
 
         {/* RECORD INFORMATION */}
-        <section className="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
           <h2 className="text-xl font-semibold text-slate-900">
             Record Information
@@ -184,13 +184,13 @@ function MedicalRecordDetails() {
         </section>
 
         {/* DIAGNOSIS */}
-        <section className="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
           <h2 className="text-xl font-semibold text-slate-900">
             Diagnosis
           </h2>
 
-          <div className="mt-4 rounded-xl bg-blue-50 p-5">
+          <div className="mt-4 rounded-xl bg-slate-50 p-5">
 
             <p className="whitespace-pre-wrap text-slate-800">
               {record.diagnosis || 'No diagnosis recorded.'}
@@ -201,7 +201,7 @@ function MedicalRecordDetails() {
         </section>
 
         {/* SYMPTOMS */}
-        <section className="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
 
           <h2 className="text-xl font-semibold text-slate-900">
             Symptoms
@@ -214,7 +214,7 @@ function MedicalRecordDetails() {
         </section>
 
         {/* TREATMENT */}
-        <section className="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
 
           <h2 className="text-xl font-semibold text-slate-900">
             Treatment
@@ -227,7 +227,7 @@ function MedicalRecordDetails() {
         </section>
 
         {/* PRESCRIPTION */}
-        <section className="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mb-6 rounded-2xl bg-white p-6 shadow-sm">
 
           <h2 className="text-xl font-semibold text-slate-900">
             Prescription
@@ -240,7 +240,7 @@ function MedicalRecordDetails() {
         </section>
 
         {/* NOTES */}
-        <section className="mb-8 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mb-8 rounded-2xl bg-white p-6 shadow-sm">
 
           <h2 className="text-xl font-semibold text-slate-900">
             Doctor's Notes
@@ -257,9 +257,9 @@ function MedicalRecordDetails() {
 
           <Link
             to="/patient/medical-records"
-            className="rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white hover:bg-blue-700"
+            className="rounded-lg bg-slate-700 px-5 py-3 font-semibold text-white hover:bg-slate-800"
           >
-            ← Back to Medical Records
+            â† Back to Medical Records
           </Link>
 
           <Link

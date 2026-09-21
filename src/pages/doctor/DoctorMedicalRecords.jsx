@@ -78,7 +78,7 @@ function DoctorMedicalRecords() {
 
   const formatDate = (dateTime) => {
     if (!dateTime) {
-      return '—'
+      return 'â€”'
     }
 
     const date = new Date(dateTime)
@@ -92,7 +92,7 @@ function DoctorMedicalRecords() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen items-center justify-center bg-blue-50/40">
+      <main className="flex min-h-screen items-center justify-center bg-slate-50">
         <p className="text-lg text-slate-600">
           Loading medical records...
         </p>
@@ -101,7 +101,7 @@ function DoctorMedicalRecords() {
   }
 
   return (
-    <main className="min-h-screen bg-blue-50/40 p-6 md:p-8">
+    <main className="min-h-screen bg-slate-50 p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
 
         {/* HEADER */}
@@ -146,7 +146,7 @@ function DoctorMedicalRecords() {
         {/* SUMMARY */}
         <section className="mb-8 grid gap-5 md:grid-cols-3">
 
-          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-slate-500">
               Total Records
             </p>
@@ -155,7 +155,7 @@ function DoctorMedicalRecords() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-slate-500">
               Patient Records
             </p>
@@ -165,7 +165,7 @@ function DoctorMedicalRecords() {
             </p>
           </div>
 
-          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-slate-500">
               Latest Record
             </p>
@@ -180,9 +180,9 @@ function DoctorMedicalRecords() {
         </section>
 
         {/* RECORDS */}
-        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-          <div className="border-b border-blue-100 p-6">
+          <div className="border-b border-slate-200 p-6">
             <h2 className="text-xl font-semibold text-slate-900">
               My Medical Records
             </h2>
@@ -220,7 +220,7 @@ function DoctorMedicalRecords() {
 
               <table className="min-w-full">
 
-                <thead className="bg-blue-50">
+                <thead className="bg-slate-50">
 
                   <tr>
 
@@ -248,13 +248,13 @@ function DoctorMedicalRecords() {
 
                 </thead>
 
-                <tbody className="divide-y divide-blue-100">
+                <tbody className="divide-y divide-slate-200">
 
                   {records.map((record) => (
 
                     <tr
                       key={record.id}
-                      className="hover:bg-blue-50/50"
+                      className="hover:bg-slate-50"
                     >
 
                       {/* PATIENT */}
@@ -269,7 +269,7 @@ function DoctorMedicalRecords() {
                         </p>
 
                         <p className="text-xs text-slate-500">
-                          {record.appointmentId || '—'}
+                          {record.appointmentId || 'â€”'}
                         </p>
 
                       </td>
@@ -278,7 +278,7 @@ function DoctorMedicalRecords() {
                       <td className="max-w-xs px-6 py-5">
 
                         <p className="font-medium text-slate-900">
-                          {record.diagnosis || '—'}
+                          {record.diagnosis || 'â€”'}
                         </p>
 
                         {record.symptoms && (
@@ -323,7 +323,7 @@ function DoctorMedicalRecords() {
 
                           <Link
                             to={`/doctor/medical-records/${record.id}/edit`}
-                            className="rounded-lg bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-700 hover:bg-blue-100"
+                            className="rounded-lg bg-slate-700 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-800"
                           >
                             Edit
                           </Link>
@@ -350,5 +350,4 @@ function DoctorMedicalRecords() {
     </main>
   )
 }
-
 export default DoctorMedicalRecords

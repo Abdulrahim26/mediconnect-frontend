@@ -157,7 +157,7 @@ function EditMedicalRecord() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <p className="text-lg text-slate-600">
           Loading medical record...
         </p>
@@ -171,9 +171,9 @@ function EditMedicalRecord() {
 
   if (error && !record) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50 px-4">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
 
-        <section className="w-full max-w-lg rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-lg">
+        <section className="w-full max-w-lg rounded-2xl bg-white p-8 text-center shadow-lg">
 
           <h1 className="text-2xl font-bold text-red-600">
             Unable to Load Record
@@ -212,7 +212,7 @@ function EditMedicalRecord() {
   }
 
   return (
-    <div className="min-h-full bg-blue-50/40 p-6 md:p-8">
+    <div className="min-h-full bg-slate-50 p-6 md:p-8">
       <div className="mx-auto max-w-4xl">
 
         {/* HEADER */}
@@ -227,7 +227,7 @@ function EditMedicalRecord() {
         </header>
 
         {/* PATIENT INFORMATION */}
-        <section className="mb-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mb-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
           <h2 className="text-xl font-semibold text-slate-900">
             Record Information
@@ -266,7 +266,7 @@ function EditMedicalRecord() {
               </p>
 
               <p className="mt-1 break-all text-sm text-slate-900">
-                {record.appointmentId || '—'}
+                {record.appointmentId || 'â€”'}
               </p>
 
             </div>
@@ -298,9 +298,9 @@ function EditMedicalRecord() {
         )}
 
         {/* FORM */}
-        <form
+          <form
           onSubmit={handleSubmit}
-          className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm"
+          className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm"
         >
 
           {/* DIAGNOSIS */}
@@ -320,7 +320,7 @@ function EditMedicalRecord() {
               onChange={handleChange}
               rows={4}
               required
-              className="w-full rounded-xl border border-blue-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-slate-100"
               placeholder="Enter the patient's diagnosis"
             />
 
@@ -342,7 +342,7 @@ function EditMedicalRecord() {
               value={formData.symptoms}
               onChange={handleChange}
               rows={4}
-              className="w-full rounded-xl border border-blue-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-slate-100"
               placeholder="Describe the patient's symptoms"
             />
 
@@ -364,7 +364,7 @@ function EditMedicalRecord() {
               value={formData.treatment}
               onChange={handleChange}
               rows={4}
-              className="w-full rounded-xl border border-blue-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-slate-100"
               placeholder="Describe the recommended treatment"
             />
 
@@ -386,7 +386,7 @@ function EditMedicalRecord() {
               value={formData.prescription}
               onChange={handleChange}
               rows={4}
-              className="w-full rounded-xl border border-blue-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-slate-100"
               placeholder="Enter prescription information"
             />
 
@@ -408,18 +408,18 @@ function EditMedicalRecord() {
               value={formData.notes}
               onChange={handleChange}
               rows={5}
-              className="w-full rounded-xl border border-blue-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-xl border border-slate-200 px-4 py-3 text-slate-900 outline-none transition focus:border-blue-600 focus:ring-2 focus:ring-slate-100"
               placeholder="Add any additional clinical notes"
             />
 
           </div>
 
           {/* ACTIONS */}
-          <div className="flex flex-col-reverse gap-3 border-t border-blue-100 pt-6 sm:flex-row sm:justify-between">
+          <div className="flex flex-col-reverse gap-3 border-t border-slate-200 pt-6 sm:flex-row sm:justify-between">
 
             <Link
               to="/doctor/medical-records"
-              className="rounded-lg bg-blue-50 px-5 py-3 text-center font-semibold text-blue-700 hover:bg-blue-100"
+              className="rounded-lg bg-slate-50 px-5 py-3 text-center font-semibold text-blue-700 hover:bg-slate-100"
             >
               Cancel
             </Link>

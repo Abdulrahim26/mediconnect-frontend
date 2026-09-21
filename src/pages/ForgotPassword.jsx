@@ -29,7 +29,7 @@ function ForgotPassword() {
         setError(error.response.data.message)
       } else {
         setError(
-          'Unable to process your request. Please try again.',
+          'Unable to process your request. Please try again.'
         )
       }
     } finally {
@@ -38,14 +38,10 @@ function ForgotPassword() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-blue-50/40 px-4">
-      <section className="w-full max-w-md rounded-2xl border border-blue-100 bg-white p-8 shadow-lg">
+    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-4">
+      <section className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
         <div className="mb-8 text-center">
-          <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-xl text-blue-700">
-            ✦
-          </div>
-
-          <h1 className="mt-4 text-3xl font-bold text-slate-900">
+          <h1 className="text-3xl font-bold text-slate-900">
             MediConnect
           </h1>
 
@@ -53,20 +49,20 @@ function ForgotPassword() {
             Forgot Password?
           </h2>
 
-          <p className="mt-2 text-sm leading-6 text-slate-600">
+          <p className="mt-2 text-sm text-slate-600">
             Enter your email address and we will send you a
             password reset link.
           </p>
         </div>
 
         {message && (
-          <div className="mb-5 rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-700">
+          <div className="mb-5 rounded-lg bg-green-50 p-3 text-sm text-green-700">
             {message}
           </div>
         )}
 
         {error && (
-          <div className="mb-5 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <div className="mb-5 rounded-lg bg-red-50 p-3 text-sm text-red-700">
             {error}
           </div>
         )}
@@ -93,7 +89,7 @@ function ForgotPassword() {
               }
               required
               placeholder="Enter your email"
-              className="w-full rounded-lg border border-blue-200 bg-white px-4 py-3 text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+              className="w-full rounded-lg border border-slate-300 px-4 py-3 outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
             />
           </div>
 
@@ -108,12 +104,12 @@ function ForgotPassword() {
           </button>
         </form>
 
-        <div className="mt-6 border-t border-blue-100 pt-5 text-center">
+        <div className="mt-6 text-center">
           <Link
             to="/login"
             className="text-sm font-medium text-blue-600 hover:text-blue-700"
           >
-            ← Back to Sign In
+            Back to Sign In
           </Link>
         </div>
       </section>

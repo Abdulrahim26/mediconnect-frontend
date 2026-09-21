@@ -3,9 +3,93 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../auth/useAuth'
 import { useNotifications } from './NotificationContext'
 
+function getRoleName(role) {
+  switch (role) {
+    case 'PATIENT':
+      return 'Patient'
+    case 'DOCTOR':
+      return 'Doctor'
+    case 'RECEPTIONIST':
+      return 'Receptionist'
+    case 'HOSPITAL_ADMIN':
+      return 'Hospital Administrator'
+    case 'SUPER_ADMIN':
+      return 'System Administrator'
+    default:
+      return 'User'
+  }
+}
+
+function getUserName(user, role) {
+  if (!user) {
+    return getRoleName(role)
+  }
+
+  if (user.fullName) {
+    return user.fullName
+  }
+
+  if (user.name) {
+    return user.name
+  }
+
+  const fullName = [
+    user.firstName,
+    user.lastName,
+  ]
+    .filter(Boolean)
+    .join(' ')
+
+  if (fullName) {
+    return fullName
+  }
+
+  if (user.username) {
+    return user.username
+  }
+
+  if (user.email) {
+    return user.email
+  }
+
+  return getRoleName(role)
+}
+
+function getInitials(user, role) {
+  const name = getUserName(user, role)
+
+  const words = name
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+
+  if (words.length >= 2) {
+    return `${words[0][0]}${words[words.length - 1][0]}`.toUpperCase()
+  }
+
+  return (
+    words[0]?.substring(0, 2).toUpperCase() ||
+    'U'
+  )
+}
+
+function formatNotificationType(type) {
+  if (!type) {
+    return 'Notification'
+  }
+
+  return type
+    .replaceAll('_', ' ')
+    .replace(
+      /\b\w/g,
+      (letter) => letter.toUpperCase(),
+    )
+}
+
 function TopBar({ onMenuClick }) {
-  const navigate = useNavigate()
   const { user, role, logout } = useAuth()
+  const navigate = useNavigate()
+
   const {
     notifications,
     unreadCount,
@@ -13,104 +97,13 @@ function TopBar({ onMenuClick }) {
     markAllAsRead,
   } = useNotifications()
 
-  const [showNotifications, setShowNotifications] = useState(false)
+  const [notificationOpen, setNotificationOpen] = useState(false)
 
-  const getRoleName = () => {
-    switch (role) {
-      case 'PATIENT':
-        return 'Patient'
-
-      case 'DOCTOR':
-        return 'Doctor'
-
-      case 'RECEPTIONIST':
-        return 'Receptionist'
-
-      case 'HOSPITAL_ADMIN':
-        return 'Hospital Administrator'
-
-      case 'SUPER_ADMIN':
-        return 'System Administrator'
-
-      default:
-        return 'User'
-    }
-  }
-
-  const getUserName = () => {
-    if (user?.fullName) {
-      return user.fullName
-    }
-
-    if (user?.name) {
-      return user.name
-    }
-
-    if (user?.firstName || user?.lastName) {
-      return `${user.firstName || ''} ${user.lastName || ''}`.trim()
-    }
-
-    if (user?.username) {
-      return user.username
-    }
-
-    if (user?.email) {
-      return user.email
-    }
-
-    return 'User'
-  }
-
-  const getInitials = () => {
-    const name = getUserName()
-
-    if (!name) {
-      return 'U'
-    }
-
-    const parts = name
-      .trim()
-      .split(/\s+/)
-      .filter(Boolean)
-
-    if (parts.length === 1) {
-      return parts[0].charAt(0).toUpperCase()
-    }
-
-    return `${parts[0].charAt(0)}${parts[parts.length - 1].charAt(0)}`
-      .toUpperCase()
-  }
-
-  const formatNotificationType = (type) => {
-    if (!type) {
-      return 'Notification'
-    }
-
-    return type
-      .toString()
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, (character) => character.toUpperCase())
-  }
+  const userName = getUserName(user, role)
+  const roleName = getRoleName(role)
+  const initials = getInitials(user, role)
 
   const recentNotifications = notifications.slice(0, 5)
-
-  const handleNotificationClick = async (notification) => {
-    if (!notification.read) {
-      await markAsRead(notification.id)
-    }
-
-    setShowNotifications(false)
-    navigate('/notifications')
-  }
-
-  const handleViewAllNotifications = () => {
-    setShowNotifications(false)
-    navigate('/notifications')
-  }
-
-  const handleMarkAllAsRead = async () => {
-    await markAllAsRead()
-  }
 
   const handleLogout = () => {
     const confirmed = window.confirm(
@@ -126,207 +119,292 @@ function TopBar({ onMenuClick }) {
   }
 
   return (
-    <header className="sticky top-0 z-30 border-b border-blue-100 bg-white">
-      <div className="flex min-h-16 items-center justify-between gap-3 px-4 py-3 sm:px-6">
-        {/* MOBILE MENU + BRAND */}
+    <header className="sticky top-0 z-30 flex min-h-20 items-center justify-between border-b border-slate-200 bg-white px-4 py-3 md:px-6">
 
-        <div className="flex min-w-0 items-center gap-3">
-          <button
-            type="button"
-            onClick={onMenuClick}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-50 text-xl text-blue-700 transition hover:bg-blue-100 lg:hidden"
-            aria-label="Open navigation menu"
-          >
-            ☰
-          </button>
+      {/* LEFT SIDE */}
 
-          <div className="min-w-0 lg:hidden">
-            <p className="truncate text-base font-bold text-slate-900">
-              MediConnect
-            </p>
+      <div className="flex items-center gap-3">
 
-            <p className="truncate text-xs font-medium text-blue-600">
-              Healthcare Management
-            </p>
-          </div>
-        </div>
+        {/* MOBILE MENU */}
 
-        {/* DESKTOP PAGE CONTEXT */}
+        <button
+          type="button"
+          onClick={onMenuClick}
+          className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-50 lg:hidden"
+          aria-label="Open navigation"
+        >
+          â˜°
+        </button>
 
-        <div className="hidden min-w-0 flex-1 lg:block">
-          <p className="text-sm font-semibold text-blue-600">
+        {/* MOBILE BRAND */}
+
+        <div className="lg:hidden">
+          <p className="text-lg font-bold text-slate-900">
             MediConnect
           </p>
 
-          <p className="truncate text-xs text-slate-500">
-            Healthcare Management System
+          <p className="hidden text-[10px] text-slate-400 sm:block">
+            Healthcare Management
           </p>
         </div>
 
-        {/* RIGHT SIDE */}
+        {/* DESKTOP TITLE */}
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          {/* NOTIFICATIONS */}
+        <div className="hidden lg:block">
+          <p className="text-sm font-medium text-slate-500">
+            MediConnect
+          </p>
 
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() =>
-                setShowNotifications((previous) => !previous)
-              }
-              className="relative flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-lg text-blue-700 transition hover:bg-blue-100"
-              aria-label="Notifications"
-              aria-expanded={showNotifications}
-            >
-              🔔
+          <p className="text-xs text-slate-400">
+            Healthcare Management
+          </p>
+        </div>
+      </div>
 
-              {unreadCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex min-h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
-                  {unreadCount > 99 ? '99+' : unreadCount}
-                </span>
-              )}
-            </button>
+      {/* RIGHT SIDE */}
 
-            {showNotifications && (
-              <div className="absolute right-0 top-12 z-50 w-[min(24rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-xl">
-                <div className="flex items-center justify-between border-b border-blue-100 bg-blue-50/60 px-4 py-3">
+      <div className="flex items-center gap-2 sm:gap-3">
+
+        {/* NOTIFICATION BELL */}
+
+        <div className="relative">
+
+          <button
+            type="button"
+            onClick={() =>
+              setNotificationOpen(
+                (previous) => !previous,
+              )
+            }
+            className={`
+                relative rounded-xl p-2.5
+                transition
+                ${
+                  notificationOpen
+                    ? 'bg-slate-50 text-blue-700'
+                    : 'text-slate-600 hover:bg-slate-50'
+                }
+              `}
+            aria-label="Notifications"
+            aria-expanded={notificationOpen}
+          >
+            <span className="text-xl">
+              ðŸ””
+            </span>
+
+            {unreadCount > 0 && (
+              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-red-600 px-1 text-[10px] font-bold text-white">
+                {unreadCount > 9
+                  ? '9+'
+                  : unreadCount}
+              </span>
+            )}
+          </button>
+
+          {/* NOTIFICATION DROPDOWN */}
+
+          {notificationOpen && (
+            <>
+              <button
+                type="button"
+                aria-label="Close notifications"
+                onClick={() =>
+                  setNotificationOpen(false)
+                }
+                className="fixed inset-0 z-40 bg-transparent"
+              />
+
+              <div className="absolute right-0 top-12 z-50 w-[calc(100vw-2rem)] max-w-sm overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl">
+
+                {/* HEADER */}
+
+                <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+
                   <div>
-                    <h2 className="text-sm font-bold text-slate-900">
+                    <h3 className="font-semibold text-slate-900">
                       Notifications
-                    </h2>
+                    </h3>
 
-                    <p className="mt-0.5 text-xs text-slate-500">
-                      {unreadCount > 0
-                        ? `${unreadCount} unread notification${
-                            unreadCount === 1 ? '' : 's'
-                          }`
-                        : 'You are all caught up'}
-                    </p>
+                    {unreadCount > 0 && (
+                      <p className="mt-0.5 text-xs text-slate-500">
+                        {unreadCount}{' '}
+                        unread notification
+                        {unreadCount !== 1
+                          ? 's'
+                          : ''}
+                      </p>
+                    )}
                   </div>
 
                   {unreadCount > 0 && (
                     <button
                       type="button"
-                      onClick={handleMarkAllAsRead}
-                      className="text-xs font-semibold text-blue-600 transition hover:text-blue-800"
+                      onClick={markAllAsRead}
+                      className="text-xs font-semibold text-blue-600 transition hover:text-blue-700"
                     >
                       Mark all read
                     </button>
                   )}
                 </div>
 
-                {recentNotifications.length === 0 ? (
-                  <div className="px-5 py-8 text-center">
-                    <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-full bg-blue-50 text-lg">
-                      🔔
+                {/* NOTIFICATIONS */}
+
+                <div className="max-h-80 overflow-y-auto">
+
+                  {recentNotifications.length === 0 ? (
+                    <div className="p-8 text-center">
+
+                      <div className="mb-2 text-3xl">
+                        ðŸ””
+                      </div>
+
+                      <p className="text-sm font-medium text-slate-700">
+                        No notifications yet
+                      </p>
+
+                      <p className="mt-1 text-xs text-slate-400">
+                        You're all caught up.
+                      </p>
+
                     </div>
+                  ) : (
+                    recentNotifications.map(
+                      (notification) => (
+                        <button
+                          key={notification.id}
+                          type="button"
+                          onClick={() => {
+                            if (
+                              !notification.readStatus
+                            ) {
+                              markAsRead(
+                                notification.id,
+                              )
+                            }
+                          }}
+                          className={`
+                              w-full border-b border-slate-100
+                              px-4 py-3 text-left
+                              transition hover:bg-slate-50
+                              ${
+                                notification.readStatus
+                                  ? 'bg-white'
+                                  : 'bg-slate-50'
+                              }
+                            `}
+                        >
 
-                    <p className="mt-3 text-sm font-medium text-slate-700">
-                      No notifications
-                    </p>
+                          <div className="flex items-start gap-3">
 
-                    <p className="mt-1 text-xs text-slate-500">
-                      New notifications will appear here.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="max-h-80 overflow-y-auto">
-                    {recentNotifications.map((notification) => (
-                      <button
-                        key={notification.id}
-                        type="button"
-                        onClick={() =>
-                          handleNotificationClick(notification)
-                        }
-                        className={`w-full border-b border-slate-100 px-4 py-3 text-left transition last:border-b-0 hover:bg-blue-50 ${
-                          notification.read
-                            ? 'bg-white'
-                            : 'bg-blue-50/40'
-                        }`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm text-blue-700">
-                            🔵
-                          </div>
+                            <span className="mt-0.5">
+                              {notification.readStatus
+                                ? 'ðŸ””'
+                                : 'ðŸ”µ'}
+                            </span>
 
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-start justify-between gap-3">
-                              <p className="text-xs font-semibold text-blue-700">
-                                {formatNotificationType(
-                                  notification.type,
+                            <div className="min-w-0 flex-1">
+
+                              <div className="flex items-start justify-between gap-2">
+
+                                <p className="text-sm font-semibold text-slate-900">
+                                  {formatNotificationType(
+                                    notification.type,
+                                  )}
+                                </p>
+
+                                {!notification.readStatus && (
+                                  <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-600" />
                                 )}
+
+                              </div>
+
+                              <p className="mt-1 line-clamp-2 text-xs text-slate-600">
+                                {notification.message}
                               </p>
 
-                              {!notification.read && (
-                                <span className="mt-1 h-2 w-2 shrink-0 rounded-full bg-blue-600" />
-                              )}
-                            </div>
-
-                            <p className="mt-1 line-clamp-2 text-sm font-medium text-slate-800">
-                              {notification.title ||
-                                notification.message ||
-                                'New notification'}
-                            </p>
-
-                            {notification.title &&
-                              notification.message && (
-                                <p className="mt-1 line-clamp-2 text-xs text-slate-500">
-                                  {notification.message}
+                              {notification.createdAt && (
+                                <p className="mt-1 text-[11px] text-slate-400">
+                                  {new Date(
+                                    notification.createdAt,
+                                  ).toLocaleString()}
                                 </p>
                               )}
-                          </div>
-                        </div>
-                      </button>
-                    ))}
-                  </div>
-                )}
 
-                <div className="border-t border-blue-100 bg-slate-50 px-4 py-3">
+                            </div>
+
+                          </div>
+
+                        </button>
+                      ),
+                    )
+                  )}
+
+                </div>
+
+                {/* FOOTER */}
+
+                <div className="border-t border-slate-200 p-2">
+
                   <button
                     type="button"
-                    onClick={handleViewAllNotifications}
-                    className="w-full rounded-lg bg-white px-3 py-2 text-sm font-semibold text-blue-600 transition hover:bg-blue-50 hover:text-blue-700"
+                    onClick={() => {
+                      setNotificationOpen(false)
+                      navigate('/notifications')
+                    }}
+                    className="w-full rounded-lg bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
                   >
                     View all notifications
                   </button>
+
                 </div>
+
               </div>
-            )}
-          </div>
+            </>
+          )}
 
-          {/* USER */}
-
-          <div className="hidden items-center gap-3 border-l border-blue-100 pl-3 sm:flex">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
-              {getInitials()}
-            </div>
-
-            <div className="hidden min-w-0 xl:block">
-              <p className="max-w-48 truncate text-sm font-semibold text-slate-900">
-                {getUserName()}
-              </p>
-
-              <p className="max-w-48 truncate text-xs font-medium text-blue-600">
-                {getRoleName()}
-              </p>
-            </div>
-          </div>
-
-          {/* LOGOUT */}
-
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="flex h-10 items-center gap-2 rounded-lg border border-blue-100 bg-white px-3 text-sm font-semibold text-slate-600 transition hover:border-blue-200 hover:bg-blue-50 hover:text-blue-700"
-          >
-            <span className="text-base">↪</span>
-
-            <span className="hidden md:inline">
-              Logout
-            </span>
-          </button>
         </div>
+
+        {/* USER INFORMATION */}
+
+        <div className="hidden text-right sm:block">
+
+          <p className="max-w-48 truncate text-sm font-semibold text-slate-900">
+            {userName}
+          </p>
+
+          <p className="text-xs text-slate-500">
+            {roleName}
+          </p>
+
+        </div>
+
+        {/* AVATAR */}
+
+        <div
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-100 font-bold text-blue-700"
+          title={userName}
+        >
+          {initials}
+        </div>
+
+        {/* LOGOUT */}
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm font-semibold text-slate-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 sm:px-4"
+        >
+          <span className="hidden sm:inline">
+            Logout
+          </span>
+
+          <span className="sm:hidden">
+            â†ª
+          </span>
+        </button>
+
       </div>
+
     </header>
   )
 }

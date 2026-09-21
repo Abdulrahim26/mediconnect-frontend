@@ -41,7 +41,7 @@ function DoctorWaitingQueue() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50">
+      <div className="flex min-h-screen items-center justify-center bg-slate-100">
         <p className="text-lg text-slate-600">
           Loading waiting queue...
         </p>
@@ -50,7 +50,7 @@ function DoctorWaitingQueue() {
   }
 
   return (
-    <div className="min-h-full bg-blue-50/40 p-6 md:p-8">
+    <div className="min-h-full bg-slate-50 p-6 md:p-8">
       <div className="mx-auto max-w-6xl">
 
         <header className="mb-8">
@@ -69,7 +69,7 @@ function DoctorWaitingQueue() {
           </div>
         )}
 
-        <section className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
           <div className="mb-6">
             <p className="text-sm text-slate-500">
@@ -81,7 +81,7 @@ function DoctorWaitingQueue() {
           </div>
 
           {appointments.length === 0 ? (
-            <div className="rounded-xl bg-blue-50 p-8 text-center">
+            <div className="rounded-xl bg-slate-50 p-8 text-center">
               <p className="text-blue-700">
                 No patients are currently waiting.
               </p>
@@ -92,7 +92,7 @@ function DoctorWaitingQueue() {
               <table className="w-full text-left">
 
                 <thead>
-                  <tr className="border-b border-blue-100">
+                  <tr className="border-b border-slate-200">
 
                     <th className="px-4 py-3 text-sm font-semibold text-slate-600">
                       Patient
@@ -122,7 +122,7 @@ function DoctorWaitingQueue() {
                   {appointments.map((appointment) => (
                     <tr
                       key={appointment.id}
-                      className="border-b border-blue-100"
+                      className="border-b border-slate-200"
                     >
 
                       <td className="px-4 py-4 font-medium text-slate-900">
@@ -142,7 +142,7 @@ function DoctorWaitingQueue() {
                       </td>
 
                       <td className="px-4 py-4">
-                        <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-semibold text-blue-700">
+                        <span className="rounded-full bg-slate-50 px-3 py-1 text-sm font-semibold text-blue-700">
                           {appointment.status}
                         </span>
                       </td>

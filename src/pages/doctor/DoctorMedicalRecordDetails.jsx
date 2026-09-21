@@ -47,7 +47,7 @@ function DoctorMedicalRecordDetails() {
 
   const formatDate = (dateTime) => {
     if (!dateTime) {
-      return '—'
+      return 'â€”'
     }
 
     const date = new Date(dateTime)
@@ -61,7 +61,7 @@ function DoctorMedicalRecordDetails() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50/40">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50">
         <p className="text-lg text-slate-600">
           Loading medical record...
         </p>
@@ -71,8 +71,8 @@ function DoctorMedicalRecordDetails() {
 
   if (error) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-blue-50/40 p-6">
-        <section className="w-full max-w-lg rounded-2xl border border-blue-100 bg-white p-8 text-center shadow-sm">
+      <div className="flex min-h-screen items-center justify-center bg-slate-50 p-6">
+        <section className="w-full max-w-lg rounded-2xl bg-white p-8 text-center shadow-sm">
           <h1 className="text-2xl font-bold text-red-600">
             Unable to Load Record
           </h1>
@@ -92,7 +92,7 @@ function DoctorMedicalRecordDetails() {
 
             <Link
               to="/doctor/medical-records"
-              className="rounded-lg bg-blue-50 px-5 py-3 font-semibold text-blue-700 hover:bg-blue-100"
+              className="rounded-lg bg-slate-800 px-5 py-3 font-semibold text-white hover:bg-slate-700"
             >
               Back to Records
             </Link>
@@ -107,7 +107,7 @@ function DoctorMedicalRecordDetails() {
   }
 
   return (
-    <div className="min-h-full bg-blue-50/40 p-6 md:p-8">
+    <div className="min-h-full bg-slate-50 p-6 md:p-8">
       <div className="mx-auto max-w-5xl">
 
         {/* HEADER */}
@@ -124,32 +124,32 @@ function DoctorMedicalRecordDetails() {
         {/* PATIENT / DOCTOR INFORMATION */}
         <section className="mb-6 grid gap-6 md:grid-cols-2">
 
-          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-slate-500">
               Patient
             </p>
 
             <h2 className="mt-2 text-xl font-bold text-slate-900">
-              {record.patientName || '—'}
+              {record.patientName || 'â€”'}
             </h2>
           </div>
 
-          <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
             <p className="text-sm font-medium text-slate-500">
               Doctor
             </p>
 
             <h2 className="mt-2 text-xl font-bold text-slate-900">
-              Dr. {record.doctorName || '—'}
+              Dr. {record.doctorName || 'â€”'}
             </h2>
           </div>
 
         </section>
 
         {/* RECORD INFORMATION */}
-        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
+        <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
 
-          <div className="border-b border-blue-100 p-6">
+          <div className="border-b border-slate-200 p-6">
             <h2 className="text-xl font-semibold text-slate-900">
               Clinical Information
             </h2>
@@ -167,7 +167,7 @@ function DoctorMedicalRecordDetails() {
                 Diagnosis
               </p>
 
-              <div className="mt-2 rounded-xl bg-blue-50 p-4">
+              <div className="mt-2 rounded-xl bg-slate-50 p-4">
                 <p className="whitespace-pre-wrap text-slate-900">
                   {record.diagnosis || 'Not specified'}
                 </p>
@@ -180,7 +180,7 @@ function DoctorMedicalRecordDetails() {
                 Symptoms
               </p>
 
-              <div className="mt-2 rounded-xl bg-blue-50 p-4">
+              <div className="mt-2 rounded-xl bg-slate-50 p-4">
                 <p className="whitespace-pre-wrap text-slate-900">
                   {record.symptoms || 'Not specified'}
                 </p>
@@ -193,7 +193,7 @@ function DoctorMedicalRecordDetails() {
                 Treatment
               </p>
 
-              <div className="mt-2 rounded-xl bg-blue-50 p-4">
+              <div className="mt-2 rounded-xl bg-slate-50 p-4">
                 <p className="whitespace-pre-wrap text-slate-900">
                   {record.treatment || 'Not specified'}
                 </p>
@@ -206,7 +206,7 @@ function DoctorMedicalRecordDetails() {
                 Prescription
               </p>
 
-              <div className="mt-2 rounded-xl bg-blue-50 p-4">
+              <div className="mt-2 rounded-xl bg-slate-50 p-4">
                 <p className="whitespace-pre-wrap text-slate-900">
                   {record.prescription || 'Not specified'}
                 </p>
@@ -219,7 +219,7 @@ function DoctorMedicalRecordDetails() {
                 Doctor's Notes
               </p>
 
-              <div className="mt-2 rounded-xl bg-blue-50 p-4">
+              <div className="mt-2 rounded-xl bg-slate-50 p-4">
                 <p className="whitespace-pre-wrap text-slate-900">
                   {record.notes || 'No notes added'}
                 </p>
@@ -230,7 +230,7 @@ function DoctorMedicalRecordDetails() {
         </section>
 
         {/* RECORD METADATA */}
-        <section className="mt-6 rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
+        <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
 
           <h2 className="text-lg font-semibold text-slate-900">
             Record Information
@@ -254,7 +254,7 @@ function DoctorMedicalRecordDetails() {
               </p>
 
               <p className="mt-1 break-all font-medium text-slate-900">
-                {record.appointmentId || '—'}
+                {record.appointmentId || 'â€”'}
               </p>
             </div>
 
@@ -277,7 +277,7 @@ function DoctorMedicalRecordDetails() {
 
           <Link
             to="/doctor/medical-records"
-            className="rounded-lg bg-blue-50 px-5 py-3 font-semibold text-blue-700 hover:bg-blue-100"
+            className="rounded-lg bg-slate-800 px-5 py-3 font-semibold text-white hover:bg-slate-700"
           >
             Back to Medical Records
           </Link>

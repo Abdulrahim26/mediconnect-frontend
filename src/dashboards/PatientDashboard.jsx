@@ -2,45 +2,162 @@
 import { Link } from 'react-router-dom'
 import api from '../api/axios'
 
+function getStatusClasses(status) {
+  switch (status) {
+    case 'PENDING':
+      return 'bg-yellow-100 text-yellow-700'
+
+    case 'APPROVED':
+      return 'bg-blue-100 text-blue-700'
+
+    case 'CHECKED_IN':
+      return 'bg-purple-100 text-purple-700'
+
+    case 'COMPLETED':
+      return 'bg-green-100 text-green-700'
+
+    case 'CANCELLED':
+      return 'bg-red-100 text-red-700'
+
+    case 'REJECTED':
+      return 'bg-red-100 text-red-700'
+
+    default:
+      return 'bg-slate-100 text-slate-700'
+  }
+}
+
+function getStatusLabel(status) {
+  switch (status) {
+    case 'PENDING':
+      return 'Pending'
+
+    case 'APPROVED':
+      return 'Approved'
+
+    case 'CHECKED_IN':
+      return 'Checked In'
+
+    case 'COMPLETED':
+      return 'Completed'
+
+    case 'CANCELLED':
+      return 'Cancelled'
+
+    case 'REJECTED':
+      return 'Rejected'
+
+    default:
+      return status || 'Unknown'
+  }
+}
+
 function PatientDashboard() {
   const [appointments, setAppointments] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [actionLoading, setActionLoading] = useState(null)
-  const [filter, setFilter] = useState('ALL')
+  const [view, setView] = useState('all')
+  const [actionLoading, setActionLoading] = useState(false)
 
   useEffect(() => {
+    let cancelled = false
+
+    const fetchAppointments = async () => {
+      try {
+        setLoading(true)
+        setError('')
+
+        const response = await api.get('/appointments/my')
+
+        if (!cancelled) {
+          setAppointments(
+            Array.isArray(response.data)
+              ? response.data
+              : [],
+          )
+        }
+      } catch (error) {
+        console.error(
+          'Patient appointments error:',
+          error,
+        )
+
+        if (!cancelled) {
+          if (error.response?.status === 401) {
+            setError(
+              'Your session has expired. Please log in again.',
+            )
+          } else if (error.response?.status === 403) {
+            setError(
+              'You do not have permission to view your appointments.',
+            )
+          } else {
+            setError(
+              'Unable to load your appointments.',
+            )
+          }
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false)
+        }
+      }
+    }
+
     fetchAppointments()
+
+    return () => {
+      cancelled = true
+    }
   }, [])
 
-  const fetchAppointments = async () => {
-    try {
-      setLoading(true)
-      setError('')
+  const upcomingAppointments = useMemo(
+    () =>
+      appointments.filter(
+        (appointment) =>
+          appointment.status === 'PENDING' ||
+          appointment.status === 'APPROVED' ||
+          appointment.status === 'CHECKED_IN',
+      ),
+    [appointments],
+  )
 
-      const response = await api.get('/appointments/my')
+  const completedAppointments = useMemo(
+    () =>
+      appointments.filter(
+        (appointment) =>
+          appointment.status === 'COMPLETED',
+      ),
+    [appointments],
+  )
 
-      setAppointments(response.data || [])
-    } catch (err) {
-      console.error('Error fetching patient appointments:', err)
+  const cancelledAppointments = useMemo(
+    () =>
+      appointments.filter(
+        (appointment) =>
+          appointment.status === 'CANCELLED' ||
+          appointment.status === 'REJECTED',
+      ),
+    [appointments],
+  )
 
-      if (err.response?.status === 401) {
-        setError(
-          'Your session has expired. Please log in again.',
-        )
-      } else if (err.response?.status === 403) {
-        setError(
-          'You do not have permission to view your appointments.',
-        )
-      } else if (err.response?.data?.message) {
-        setError(err.response.data.message)
-      } else {
-        setError('Unable to load your appointments.')
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
+  const historyAppointments = useMemo(
+    () =>
+      appointments.filter(
+        (appointment) =>
+          appointment.status === 'COMPLETED' ||
+          appointment.status === 'CANCELLED' ||
+          appointment.status === 'REJECTED',
+      ),
+    [appointments],
+  )
+
+  const displayedAppointments =
+    view === 'upcoming'
+      ? upcomingAppointments
+      : view === 'history'
+        ? historyAppointments
+        : appointments
 
   const handleCancel = async (appointmentId) => {
     const confirmed = window.confirm(
@@ -52,174 +169,145 @@ function PatientDashboard() {
     }
 
     try {
-      setActionLoading(appointmentId)
+      setActionLoading(true)
       setError('')
 
-      await api.put(`/appointments/${appointmentId}/cancel`)
+      const response = await api.put(
+        `/appointments/${appointmentId}/cancel`,
+      )
 
-      await fetchAppointments()
-    } catch (err) {
-      console.error('Error cancelling appointment:', err)
+      setAppointments(
+        (previousAppointments) =>
+          previousAppointments.map(
+            (appointment) =>
+              appointment.id === appointmentId
+                ? response.data
+                : appointment,
+          ),
+      )
+    } catch (error) {
+      console.error(
+        'Cancel appointment error:',
+        error,
+      )
 
-      if (err.response?.data?.message) {
-        setError(err.response.data.message)
-      } else {
-        setError('Unable to cancel the appointment.')
-      }
+      setError(
+        error.response?.data?.message ||
+          'Unable to cancel this appointment.',
+      )
     } finally {
-      setActionLoading(null)
+      setActionLoading(false)
     }
   }
 
-  const handleReschedule = (appointmentId) => {
-    window.location.href = `/patient/book-appointment?reschedule=${appointmentId}`
-  }
-
-  const upcomingAppointments = useMemo(() => {
-    return appointments.filter((appointment) => {
-      const status = appointment.status?.toUpperCase()
-
-      return (
-        status !== 'COMPLETED' &&
-        status !== 'CANCELLED' &&
-        status !== 'CANCELED' &&
-        status !== 'REJECTED'
-      )
-    })
-  }, [appointments])
-
-  const completedAppointments = useMemo(() => {
-    return appointments.filter(
-      (appointment) =>
-        appointment.status?.toUpperCase() === 'COMPLETED',
+  const handleReschedule = async (appointment) => {
+    const newDate = window.prompt(
+      'Enter the new appointment date (YYYY-MM-DD):',
+      appointment.appointmentDate || '',
     )
-  }, [appointments])
 
-  const cancelledAppointments = useMemo(() => {
-    return appointments.filter((appointment) => {
-      const status = appointment.status?.toUpperCase()
+    if (!newDate) {
+      return
+    }
 
-      return (
-        status === 'CANCELLED' ||
-        status === 'CANCELED' ||
-        status === 'REJECTED'
+    const newTime = window.prompt(
+      'Enter the new appointment time (HH:MM):',
+      appointment.appointmentTime || '',
+    )
+
+    if (!newTime) {
+      return
+    }
+
+    try {
+      setActionLoading(true)
+      setError('')
+
+      const request = {
+        appointmentDate: newDate,
+        appointmentTime: newTime,
+        reason: appointment.reason,
+      }
+
+      const response = await api.put(
+        `/appointments/${appointment.id}/reschedule`,
+        request,
       )
-    })
-  }, [appointments])
 
-  const filteredAppointments = useMemo(() => {
-    switch (filter) {
-      case 'UPCOMING':
-        return upcomingAppointments
+      setAppointments(
+        (previousAppointments) =>
+          previousAppointments.map(
+            (item) =>
+              item.id === appointment.id
+                ? response.data
+                : item,
+          ),
+      )
+    } catch (error) {
+      console.error('========== RESCHEDULE ERROR ==========')
+      console.error('Status:', error.response?.status)
+      console.error('Response data:', error.response?.data)
+      console.error('Response headers:', error.response?.headers)
+      console.error('Request data:', error.config?.data)
+      console.error('Request URL:', error.config?.url)
+      console.error('======================================')
 
-      case 'COMPLETED':
-        return completedAppointments
-
-      case 'CANCELLED':
-        return cancelledAppointments
-
-      default:
-        return appointments
-    }
-  }, [
-    filter,
-    appointments,
-    upcomingAppointments,
-    completedAppointments,
-    cancelledAppointments,
-  ])
-
-  const getDoctorName = (appointment) => {
-    if (appointment.doctorName) {
-      return appointment.doctorName
-    }
-
-    if (appointment.doctor?.fullName) {
-      return appointment.doctor.fullName
-    }
-
-    if (
-      appointment.doctor?.firstName ||
-      appointment.doctor?.lastName
-    ) {
-      return `${appointment.doctor.firstName || ''} ${
-        appointment.doctor.lastName || ''
-      }`.trim()
-    }
-
-    return 'Doctor'
-  }
-
-  const formatStatus = (status) => {
-    if (!status) {
-      return 'Unknown'
-    }
-
-    return status
-      .toString()
-      .replace(/_/g, ' ')
-      .replace(/\b\w/g, (character) => character.toUpperCase())
-  }
-
-  const getStatusClasses = (status) => {
-    switch (status?.toUpperCase()) {
-      case 'PENDING':
-        return 'bg-amber-50 text-amber-700'
-
-      case 'APPROVED':
-        return 'bg-blue-50 text-blue-700'
-
-      case 'CHECKED_IN':
-      case 'WAITING':
-        return 'bg-indigo-50 text-indigo-700'
-
-      case 'COMPLETED':
-        return 'bg-green-50 text-green-700'
-
-      case 'CANCELLED':
-      case 'CANCELED':
-      case 'REJECTED':
-        return 'bg-red-50 text-red-700'
-
-      default:
-        return 'bg-slate-100 text-slate-600'
+      setError(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          'Unable to reschedule this appointment.',
+      )
+    } finally {
+      setActionLoading(false)
     }
   }
 
-  const canModifyAppointment = (status) => {
-    const normalizedStatus = status?.toUpperCase()
-
+  if (loading) {
     return (
-      normalizedStatus === 'PENDING' ||
-      normalizedStatus === 'APPROVED'
+      <div className="flex min-h-full items-center justify-center p-6">
+        <div className="text-center">
+          <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-4 border-slate-200 border-t-blue-600" />
+
+          <p className="text-lg font-medium text-slate-600">
+            Loading patient dashboard...
+          </p>
+        </div>
+      </div>
     )
   }
 
   return (
-    <div className="min-h-full bg-blue-50/40 p-4 sm:p-6 md:p-8">
+    <div className="min-h-full bg-slate-50 p-4 sm:p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
-        {/* HEADER */}
+
+        {/* PAGE HEADER */}
 
         <header className="mb-8">
-          <p className="text-sm font-semibold text-blue-600">
-            MediConnect
-          </p>
-
-          <h1 className="mt-1 text-2xl font-bold text-slate-900 sm:text-3xl">
+          <h1 className="text-2xl font-bold text-slate-900 sm:text-3xl">
             Patient Dashboard
           </h1>
 
-          <p className="mt-2 max-w-2xl text-sm text-slate-600 sm:text-base">
-            Manage your appointments, doctors, and healthcare
-            information.
+          <p className="mt-2 text-sm text-slate-600 sm:text-base">
+            Manage your healthcare appointments and medical records.
           </p>
         </header>
 
         {/* ERROR */}
 
         {error && (
-          <div className="mb-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {error}
+          <div className="mb-6 flex items-start justify-between gap-4 rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+            <p className="text-sm font-medium">
+              {error}
+            </p>
+
+            <button
+              type="button"
+              onClick={() => setError('')}
+              className="text-sm font-bold text-red-600 hover:text-red-800"
+              aria-label="Dismiss error"
+            >
+              âœ•
+            </button>
           </div>
         )}
 
@@ -236,131 +324,166 @@ function PatientDashboard() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+
             <Link
               to="/patient/doctors"
-              className="group rounded-2xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-slate-200 hover:shadow-md"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-lg text-blue-700">
-                ⚕
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-xl text-blue-700">
+                âš•
               </div>
 
-              <h3 className="mt-4 text-lg font-semibold text-slate-900">
+              <h3 className="font-bold text-slate-900">
                 Find a Doctor
               </h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Search for doctors by name, specialty, or department.
+                Search for doctors by specialty, department, or hospital.
               </p>
 
               <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Find a doctor →
+                Find a doctor â†’
               </p>
             </Link>
 
             <Link
               to="/patient/book-appointment"
-              className="group rounded-2xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-lg text-blue-700">
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-green-100 text-xl text-green-700">
                 +
               </div>
 
-              <h3 className="mt-4 text-lg font-semibold text-slate-900">
+              <h3 className="font-bold text-slate-900">
                 Book Appointment
               </h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                Schedule an appointment with a healthcare
-                professional.
+                Schedule an appointment with a doctor.
               </p>
 
               <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Book now →
+                Book now â†’
               </p>
             </Link>
 
             <Link
-              to="/patient/medical-records"
-              className="group rounded-2xl border border-blue-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+              to="/patient/appointments"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
             >
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-lg text-blue-700">
-                ▤
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100 text-xl text-purple-700">
+                â–£
               </div>
 
-              <h3 className="mt-4 text-lg font-semibold text-slate-900">
-                Medical Records
+              <h3 className="font-bold text-slate-900">
+                My Appointments
               </h3>
 
               <p className="mt-2 text-sm leading-6 text-slate-600">
-                View your medical history and healthcare records.
+                View and manage all your appointments.
               </p>
 
               <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                View records →
+                View appointments â†’
               </p>
             </Link>
+
+            <Link
+              to="/patient/verification"
+              className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
+            >
+              <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-xl text-indigo-700">
+                âœ“
+              </div>
+
+              <h3 className="font-bold text-slate-900">
+                Identity & Insurance
+              </h3>
+
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Verify your Ghana Card and NHIS information and manage your insurance details.
+              </p>
+
+              <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
+                Verify details â†’
+              </p>
+            </Link>
+
           </div>
         </section>
 
-        {/* STATISTICS */}
+        {/* APPOINTMENT STATISTICS */}
 
         <section className="mb-8">
+          <div className="mb-4">
+            <h2 className="text-xl font-semibold text-slate-900">
+              Appointment Overview
+            </h2>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
               <p className="text-sm font-medium text-slate-500">
                 Total Appointments
               </p>
 
-              <p className="mt-2 text-3xl font-bold text-slate-900">
-                {loading ? '—' : appointments.length}
+              <p className="mt-3 text-3xl font-bold text-slate-900">
+                {appointments.length}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-blue-100 bg-white p-6 shadow-sm">
               <p className="text-sm font-medium text-slate-500">
                 Upcoming
               </p>
 
-              <p className="mt-2 text-3xl font-bold text-slate-900">
-                {loading ? '—' : upcomingAppointments.length}
+              <p className="mt-3 text-3xl font-bold text-blue-600">
+                {upcomingAppointments.length}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-green-100 bg-white p-6 shadow-sm">
               <p className="text-sm font-medium text-slate-500">
                 Completed
               </p>
 
-              <p className="mt-2 text-3xl font-bold text-slate-900">
-                {loading ? '—' : completedAppointments.length}
+              <p className="mt-3 text-3xl font-bold text-green-600">
+                {completedAppointments.length}
               </p>
             </div>
 
-            <div className="rounded-2xl border border-blue-100 bg-white p-5 shadow-sm">
+            <div className="rounded-2xl border border-red-100 bg-white p-6 shadow-sm">
               <p className="text-sm font-medium text-slate-500">
                 Cancelled
               </p>
 
-              <p className="mt-2 text-3xl font-bold text-slate-900">
-                {loading ? '—' : cancelledAppointments.length}
+              <p className="mt-3 text-3xl font-bold text-red-600">
+                {cancelledAppointments.length}
               </p>
             </div>
+
           </div>
         </section>
 
         {/* APPOINTMENTS */}
 
-        <section className="overflow-hidden rounded-2xl border border-blue-100 bg-white shadow-sm">
-          <div className="border-b border-blue-100 p-5 sm:p-6">
+        <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+
+          {/* HEADER */}
+
+          <div className="border-b border-slate-200 p-5 sm:p-6">
+
             <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+
               <div>
                 <h2 className="text-xl font-semibold text-slate-900">
                   My Appointments
                 </h2>
 
                 <p className="mt-1 text-sm text-slate-500">
-                  View and manage your appointments.
+                  View your appointment schedule and status.
                 </p>
               </div>
 
@@ -368,244 +491,255 @@ function PatientDashboard() {
                 to="/patient/appointments"
                 className="text-sm font-semibold text-blue-600 hover:text-blue-700"
               >
-                View all appointments →
+                View all appointments â†’
               </Link>
+
             </div>
+
+            {/* FILTERS */}
 
             <div className="mt-5 flex flex-wrap gap-2">
+
               {[
-                ['ALL', 'All'],
-                ['UPCOMING', 'Upcoming'],
-                ['COMPLETED', 'Completed'],
-                ['CANCELLED', 'Cancelled'],
-              ].map(([value, label]) => (
+                {
+                  key: 'all',
+                  label: 'All',
+                },
+                {
+                  key: 'upcoming',
+                  label: 'Upcoming',
+                },
+                {
+                  key: 'history',
+                  label: 'History',
+                },
+              ].map((item) => (
                 <button
-                  key={value}
+                  key={item.key}
                   type="button"
-                  onClick={() => setFilter(value)}
-                  className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                    filter === value
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                  onClick={() =>
+                    setView(item.key)
+                  }
+                  className={`rounded-lg px-4 py-2 text-sm font-semibold transition ${
+                    view === item.key
+                      ? 'bg-blue-600 text-white shadow-sm'
+                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                   }`}
                 >
-                  {label}
+                  {item.label}
                 </button>
               ))}
+
             </div>
+
           </div>
 
-          {loading ? (
-            <div className="flex flex-col items-center justify-center p-10">
-              <div className="mb-4 h-9 w-9 animate-spin rounded-full border-4 border-blue-100 border-t-blue-600" />
+          {/* CONTENT */}
 
-              <p className="text-sm text-slate-500">
-                Loading appointments...
-              </p>
-            </div>
-          ) : filteredAppointments.length === 0 ? (
-            <div className="p-10 text-center">
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-blue-50 text-lg text-blue-600">
-                ▣
+          {displayedAppointments.length === 0 ? (
+
+            <div className="p-8 text-center sm:p-12">
+
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-2xl">
+                â–£
               </div>
 
-              <h3 className="mt-4 text-base font-semibold text-slate-900">
+              <h3 className="mt-4 font-semibold text-slate-900">
                 No appointments found
               </h3>
 
-              <p className="mt-1 text-sm text-slate-500">
-                You do not have any appointments in this category.
+              <p className="mx-auto mt-2 max-w-md text-sm text-slate-500">
+                There are no appointments available for the selected view.
               </p>
 
-              <Link
-                to="/patient/book-appointment"
-                className="mt-5 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-              >
-                Book an appointment
-              </Link>
+              {view !== 'history' && (
+                <Link
+                  to="/patient/book-appointment"
+                  className="mt-5 inline-flex rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                >
+                  Book an Appointment
+                </Link>
+              )}
+
             </div>
+
           ) : (
-            <>
-              {/* DESKTOP TABLE */}
 
-              <div className="hidden overflow-x-auto md:block">
-                <table className="min-w-full">
-                  <thead className="border-b border-blue-100 bg-blue-50/50">
-                    <tr>
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Doctor
-                      </th>
+            <div className="overflow-x-auto">
 
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Date
-                      </th>
+              <table className="w-full min-w-[760px] text-left">
 
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Time
-                      </th>
+                <thead className="bg-slate-50">
 
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Reason
-                      </th>
+                  <tr className="border-b border-slate-200">
 
-                      <th className="px-5 py-4 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Status
-                      </th>
+                    <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Doctor
+                    </th>
 
-                      <th className="px-5 py-4 text-right text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
+                    <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Date
+                    </th>
 
-                  <tbody className="divide-y divide-slate-100">
-                    {filteredAppointments.map((appointment) => (
+                    <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Time
+                    </th>
+
+                    <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Status
+                    </th>
+
+                    <th className="px-5 py-4 text-xs font-semibold uppercase tracking-wide text-slate-500">
+                      Action
+                    </th>
+
+                  </tr>
+
+                </thead>
+
+                <tbody>
+
+                  {displayedAppointments.map(
+                    (appointment) => (
+
                       <tr
                         key={appointment.id}
-                        className="transition hover:bg-blue-50/40"
+                        className="border-b border-slate-100 transition hover:bg-slate-50"
                       >
-                        <td className="px-5 py-4 text-sm font-medium text-slate-900">
-                          {getDoctorName(appointment)}
-                        </td>
 
-                        <td className="px-5 py-4 text-sm text-slate-600">
-                          {appointment.appointmentDate || '—'}
-                        </td>
-
-                        <td className="px-5 py-4 text-sm text-slate-600">
-                          {appointment.appointmentTime || '—'}
-                        </td>
-
-                        <td className="max-w-xs px-5 py-4 text-sm text-slate-600">
-                          {appointment.reason || '—'}
-                        </td>
+                        {/* DOCTOR */}
 
                         <td className="px-5 py-4">
+
+                          <p className="font-semibold text-slate-900">
+                            {appointment.doctorName || 'Doctor'}
+                          </p>
+
+                          {appointment.specialty && (
+                            <p className="mt-1 text-xs text-slate-500">
+                              {appointment.specialty}
+                            </p>
+                          )}
+
+                        </td>
+
+                        {/* DATE */}
+
+                        <td className="px-5 py-4 text-sm text-slate-600">
+                          {appointment.appointmentDate || 'â€”'}
+                        </td>
+
+                        {/* TIME */}
+
+                        <td className="px-5 py-4 text-sm text-slate-600">
+                          {appointment.appointmentTime || 'â€”'}
+                        </td>
+
+                        {/* STATUS */}
+
+                        <td className="px-5 py-4">
+
                           <span
                             className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${getStatusClasses(
                               appointment.status,
                             )}`}
                           >
-                            {formatStatus(appointment.status)}
+                            {getStatusLabel(
+                              appointment.status,
+                            )}
                           </span>
+
                         </td>
+
+                        {/* ACTION */}
 
                         <td className="px-5 py-4">
-                          {canModifyAppointment(
-                            appointment.status,
-                          ) ? (
-                            <div className="flex justify-end gap-2">
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleReschedule(appointment.id)
-                                }
-                                className="rounded-lg border border-blue-200 bg-white px-3 py-2 text-xs font-semibold text-blue-700 transition hover:bg-blue-50"
-                              >
-                                Reschedule
-                              </button>
 
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  handleCancel(appointment.id)
-                                }
-                                disabled={
-                                  actionLoading === appointment.id
-                                }
-                                className="rounded-lg border border-red-200 bg-white px-3 py-2 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-                              >
-                                {actionLoading === appointment.id
-                                  ? 'Cancelling...'
-                                  : 'Cancel'}
-                              </button>
-                            </div>
-                          ) : (
-                            <span className="text-xs text-slate-400">
-                              No actions
-                            </span>
-                          )}
+                          <div className="flex flex-wrap gap-2">
+
+                            {(appointment.status ===
+                              'PENDING' ||
+                              appointment.status ===
+                                'APPROVED') && (
+                              <>
+                                <button
+                                  type="button"
+                                  disabled={
+                                    actionLoading
+                                  }
+                                  onClick={() =>
+                                    handleReschedule(
+                                      appointment,
+                                    )
+                                  }
+                                  className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                  {actionLoading
+                                    ? 'Please wait...'
+                                    : 'Reschedule'}
+                                </button>
+
+                                <button
+                                  type="button"
+                                  disabled={
+                                    actionLoading
+                                  }
+                                  onClick={() =>
+                                    handleCancel(
+                                      appointment.id,
+                                    )
+                                  }
+                                  className="rounded-lg bg-red-600 px-3 py-2 text-xs font-semibold text-white transition hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+                                >
+                                  Cancel
+                                </button>
+                              </>
+                            )}
+
+                            {appointment.status ===
+                              'CHECKED_IN' && (
+                              <span className="text-xs font-semibold text-purple-600">
+                                Checked In
+                              </span>
+                            )}
+
+                            {appointment.status ===
+                              'COMPLETED' && (
+                              <span className="text-xs font-semibold text-green-600">
+                                Completed
+                              </span>
+                            )}
+
+                            {(appointment.status ===
+                              'CANCELLED' ||
+                              appointment.status ===
+                                'REJECTED') && (
+                              <span className="text-xs font-semibold text-red-600">
+                                {getStatusLabel(
+                                  appointment.status,
+                                )}
+                              </span>
+                            )}
+
+                          </div>
+
                         </td>
+
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
 
-              {/* MOBILE CARDS */}
+                    ),
+                  )}
 
-              <div className="divide-y divide-slate-100 md:hidden">
-                {filteredAppointments.map((appointment) => (
-                  <article
-                    key={appointment.id}
-                    className="p-5"
-                  >
-                    <div className="flex items-start justify-between gap-4">
-                      <div>
-                        <h3 className="font-semibold text-slate-900">
-                          {getDoctorName(appointment)}
-                        </h3>
+                </tbody>
 
-                        <p className="mt-1 text-sm text-slate-500">
-                          {appointment.appointmentDate || '—'}
-                          {' · '}
-                          {appointment.appointmentTime || '—'}
-                        </p>
-                      </div>
+              </table>
 
-                      <span
-                        className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${getStatusClasses(
-                          appointment.status,
-                        )}`}
-                      >
-                        {formatStatus(appointment.status)}
-                      </span>
-                    </div>
+            </div>
 
-                    <div className="mt-4 rounded-xl bg-blue-50/50 p-4">
-                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">
-                        Reason
-                      </p>
-
-                      <p className="mt-1 text-sm text-slate-700">
-                        {appointment.reason || 'No reason provided'}
-                      </p>
-                    </div>
-
-                    {canModifyAppointment(appointment.status) && (
-                      <div className="mt-4 grid grid-cols-2 gap-2">
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleReschedule(appointment.id)
-                          }
-                          className="rounded-lg border border-blue-200 bg-white px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50"
-                        >
-                          Reschedule
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() =>
-                            handleCancel(appointment.id)
-                          }
-                          disabled={
-                            actionLoading === appointment.id
-                          }
-                          className="rounded-lg border border-red-200 bg-white px-3 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
-                        >
-                          {actionLoading === appointment.id
-                            ? 'Cancelling...'
-                            : 'Cancel'}
-                        </button>
-                      </div>
-                    )}
-                  </article>
-                ))}
-              </div>
-            </>
           )}
+
         </section>
+
       </div>
     </div>
   )
