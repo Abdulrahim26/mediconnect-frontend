@@ -133,7 +133,7 @@ function TopBar({ onMenuClick }) {
           className="rounded-lg p-2 text-slate-600 transition hover:bg-slate-50 lg:hidden"
           aria-label="Open navigation"
         >
-          â˜°
+          ☰
         </button>
 
         {/* MOBILE BRAND */}
@@ -189,7 +189,7 @@ function TopBar({ onMenuClick }) {
             aria-expanded={notificationOpen}
           >
             <span className="text-xl">
-              ðŸ””
+              🔔
             </span>
 
             {unreadCount > 0 && (
@@ -255,7 +255,7 @@ function TopBar({ onMenuClick }) {
                     <div className="p-8 text-center">
 
                       <div className="mb-2 text-3xl">
-                        ðŸ””
+                        🔔
                       </div>
 
                       <p className="text-sm font-medium text-slate-700">
@@ -298,8 +298,8 @@ function TopBar({ onMenuClick }) {
 
                             <span className="mt-0.5">
                               {notification.readStatus
-                                ? 'ðŸ””'
-                                : 'ðŸ”µ'}
+                                ? ''
+                                : '🔵'}
                             </span>
 
                             <div className="min-w-0 flex-1">
@@ -399,7 +399,7 @@ function TopBar({ onMenuClick }) {
           </span>
 
           <span className="sm:hidden">
-            â†ª
+            ↪
           </span>
         </button>
 
@@ -410,3 +410,4 @@ function TopBar({ onMenuClick }) {
 }
 
 export default TopBar
+

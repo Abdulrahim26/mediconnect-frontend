@@ -84,7 +84,7 @@ function SuperAdminDashboard() {
       label: 'Hospitals',
       value: dashboard.totalHospitals,
       description: 'Registered healthcare facilities',
-      icon: 'ðŸ¥',
+      icon: '🏥',
       iconClasses: 'bg-blue-100 text-blue-700',
       valueClasses: 'text-blue-600',
     },
@@ -92,7 +92,7 @@ function SuperAdminDashboard() {
       label: 'Doctors',
       value: dashboard.totalDoctors,
       description: 'Healthcare professionals',
-      icon: 'âš•',
+      icon: '⚕',
       iconClasses: 'bg-green-100 text-green-700',
       valueClasses: 'text-green-600',
     },
@@ -100,7 +100,7 @@ function SuperAdminDashboard() {
       label: 'Patients',
       value: dashboard.totalPatients,
       description: 'Registered patients',
-      icon: 'ðŸ‘¤',
+      icon: '👤',
       iconClasses: 'bg-purple-100 text-purple-700',
       valueClasses: 'text-purple-600',
     },
@@ -108,7 +108,7 @@ function SuperAdminDashboard() {
       label: 'Appointments',
       value: dashboard.totalAppointments,
       description: 'Appointments across the platform',
-      icon: 'â–£',
+      icon: '▣',
       iconClasses: 'bg-orange-100 text-orange-700',
       valueClasses: 'text-orange-600',
     },
@@ -116,7 +116,7 @@ function SuperAdminDashboard() {
       label: 'Departments',
       value: dashboard.totalDepartments,
       description: 'Healthcare departments',
-      icon: 'â–¦',
+      icon: '▦',
       iconClasses: 'bg-indigo-100 text-indigo-700',
       valueClasses: 'text-indigo-600',
     },
@@ -179,7 +179,7 @@ function SuperAdminDashboard() {
               className="text-sm font-bold text-red-600 hover:text-red-800"
               aria-label="Dismiss error"
             >
-              âœ•
+              ✕
             </button>
           </div>
         )}
@@ -260,7 +260,7 @@ function SuperAdminDashboard() {
 
                 <div>
                   <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-xl text-blue-700">
-                    ðŸ¥
+                    🏥
                   </div>
 
                   <h3 className="text-lg font-bold text-slate-900">
@@ -280,7 +280,7 @@ function SuperAdminDashboard() {
               </div>
 
               <p className="mt-5 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Manage hospitals â†’
+                Manage hospitals →
               </p>
             </Link>
 
@@ -294,7 +294,7 @@ function SuperAdminDashboard() {
 
                 <div>
                   <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100 text-xl text-purple-700">
-                    ðŸ‘¤
+                    👤
                   </div>
 
                   <h3 className="text-lg font-bold text-slate-900">
@@ -314,7 +314,7 @@ function SuperAdminDashboard() {
               </div>
 
               <p className="mt-5 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Create hospital admin â†’
+                Create hospital admin →
               </p>
             </Link>
 
@@ -344,7 +344,7 @@ function SuperAdminDashboard() {
               <div className="flex items-start gap-4">
 
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-lg text-blue-700">
-                  ðŸ¥
+                  🏥
                 </div>
 
                 <div className="min-w-0">
@@ -365,7 +365,7 @@ function SuperAdminDashboard() {
                     to="/super-admin/hospitals"
                     className="mt-4 inline-flex text-sm font-semibold text-blue-600 hover:text-blue-700"
                   >
-                    Open hospital management â†’
+                    Open hospital management →
                   </Link>
                 </div>
 
@@ -378,7 +378,7 @@ function SuperAdminDashboard() {
               <div className="flex items-start gap-4">
 
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-purple-100 text-lg text-purple-700">
-                  ðŸ‘¤
+                  👤
                 </div>
 
                 <div className="min-w-0">
@@ -399,7 +399,7 @@ function SuperAdminDashboard() {
                     to="/super-admin/hospital-admins/create"
                     className="mt-4 inline-flex text-sm font-semibold text-blue-600 hover:text-blue-700"
                   >
-                    Create hospital admin â†’
+                    Create hospital admin →
                   </Link>
                 </div>
 

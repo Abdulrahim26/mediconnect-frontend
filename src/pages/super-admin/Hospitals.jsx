@@ -130,7 +130,7 @@ function Hospitals() {
               className="text-sm font-bold text-red-600 hover:text-red-800"
               aria-label="Dismiss error"
             >
-              âœ•
+              &#x2715;
             </button>
 
           </div>
@@ -145,7 +145,7 @@ function Hospitals() {
               <div className="flex items-center gap-4">
 
                 <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-2xl">
-                  ðŸ¥
+                  &#x1F3E5;
                 </div>
 
                 <div>
@@ -183,13 +183,13 @@ function Hospitals() {
               </div>
 
               {!loading && (
-                  <span className="text-sm font-medium text-blue-700">
-                    {hospitals.length}{' '}
-                    {hospitals.length === 1
-                      ? 'hospital'
-                      : 'hospitals'}
-                  </span>
-                )}
+                <span className="text-sm font-medium text-blue-700">
+                  {hospitals.length}{' '}
+                  {hospitals.length === 1
+                    ? 'hospital'
+                    : 'hospitals'}
+                </span>
+              )}
 
             </div>
 
@@ -215,7 +215,7 @@ function Hospitals() {
             <div className="p-10 text-center">
 
               <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-slate-50 text-2xl">
-                ðŸ¥
+                &#x1F3E5;
               </div>
 
               <h3 className="mt-4 text-lg font-semibold text-slate-900">
@@ -279,7 +279,7 @@ function Hospitals() {
                         <div className="flex items-center gap-3">
 
                           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-lg">
-                            ðŸ¥
+                            &#x1F3E5;
                           </div>
 
                           <div>
@@ -300,7 +300,7 @@ function Hospitals() {
 
                       <td className="px-6 py-5">
                         <p className="text-sm font-medium text-blue-700">
-                          {hospital.location || 'â€”'}
+                          {hospital.location || '\u2014'}
                         </p>
                       </td>
 
@@ -374,7 +374,7 @@ function Hospitals() {
                   <div className="flex items-start gap-3">
 
                     <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-100 text-xl">
-                      ðŸ¥
+                      &#x1F3E5;
                     </div>
 
                     <div className="min-w-0">
@@ -465,3 +465,4 @@ function Hospitals() {
 }
 
 export default Hospitals
+

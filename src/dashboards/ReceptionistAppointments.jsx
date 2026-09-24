@@ -549,22 +549,22 @@ function ReceptionistAppointments() {
 
                       <td className="px-6 py-4">
                         <p className="font-medium text-slate-900">
-                          {appointment.patientName || '—'}
+                          {appointment.patientName || '\u2014'}
                         </p>
                       </td>
 
                       <td className="px-6 py-4 text-slate-600">
                         {appointment.doctorName
                           ? `Dr. ${appointment.doctorName}`
-                          : '—'}
+                          : '\u2014'}
                       </td>
 
                       <td className="px-6 py-4 text-slate-600">
-                        {appointment.appointmentDate || '—'}
+                        {appointment.appointmentDate || '\u2014'}
                       </td>
 
                       <td className="px-6 py-4 text-slate-600">
-                        {appointment.appointmentTime || '—'}
+                        {appointment.appointmentTime || '\u2014'}
                       </td>
 
                       <td className="px-6 py-4">
@@ -584,7 +584,7 @@ function ReceptionistAppointments() {
                           className="block truncate"
                           title={appointment.reason || ''}
                         >
-                          {appointment.reason || '—'}
+                          {appointment.reason || '\u2014'}
                         </span>
                       </td>
 
@@ -627,7 +627,7 @@ function ReceptionistAppointments() {
                           </span>
                         ) : (
                           <span className="text-sm text-slate-400">
-                            —
+                            {'\u2014'}
                           </span>
                         )}
                       </td>
@@ -647,3 +647,4 @@ function ReceptionistAppointments() {
 }
 
 export default ReceptionistAppointments
+

@@ -49,7 +49,7 @@ function AdminDashboard() {
 
                 <div>
                   <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-xl text-blue-700">
-                    âš•
+                    &#x2695;
                   </div>
 
                   <h3 className="text-xl font-bold text-slate-900">
@@ -69,7 +69,7 @@ function AdminDashboard() {
               </div>
 
               <p className="mt-5 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Manage doctors â†’
+                Manage doctors &#x2192;
               </p>
             </Link>
 
@@ -83,7 +83,7 @@ function AdminDashboard() {
 
                 <div>
                   <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-xl text-blue-700">
-                    â–¦
+                    &#x25A6;
                   </div>
 
                   <h3 className="text-xl font-bold text-slate-900">
@@ -103,7 +103,7 @@ function AdminDashboard() {
               </div>
 
               <p className="mt-5 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Manage departments â†’
+                Manage departments &#x2192;
               </p>
             </Link>
 
@@ -133,7 +133,7 @@ function AdminDashboard() {
               <div className="flex items-start gap-4">
 
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-lg text-blue-700">
-                  âš•
+                  &#x2695;
                 </div>
 
                 <div className="min-w-0">
@@ -156,7 +156,7 @@ function AdminDashboard() {
                     to="/admin/doctors"
                     className="mt-4 inline-flex text-sm font-semibold text-blue-600 hover:text-blue-700"
                   >
-                    Open doctor management â†’
+                    Open doctor management &#x2192;
                   </Link>
 
                 </div>
@@ -170,7 +170,7 @@ function AdminDashboard() {
               <div className="flex items-start gap-4">
 
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-indigo-100 text-lg text-indigo-700">
-                  â–¦
+                  &#x25A6;
                 </div>
 
                 <div className="min-w-0">
@@ -192,7 +192,7 @@ function AdminDashboard() {
                     to="/admin/departments"
                     className="mt-4 inline-flex text-sm font-semibold text-blue-600 hover:text-blue-700"
                   >
-                    Open department management â†’
+                    Open department management &#x2192;
                   </Link>
 
                 </div>

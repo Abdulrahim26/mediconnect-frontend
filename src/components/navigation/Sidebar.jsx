@@ -8,17 +8,17 @@ function Sidebar({ mobileOpen, onClose }) {
     {
       label: 'Dashboard',
       to: '/patient/dashboard',
-      icon: 'âŒ‚',
+      icon: '⌂',
     },
     {
       label: 'Find a Doctor',
       to: '/patient/doctors',
-      icon: 'âš•',
+      icon: '⚕',
     },
     {
       label: 'Appointments',
       to: '/patient/appointments',
-      icon: 'â–£',
+      icon: '▣',
     },
   ]
 
@@ -26,12 +26,12 @@ function Sidebar({ mobileOpen, onClose }) {
     {
       label: 'Medical Records',
       to: '/patient/medical-records',
-      icon: 'â–¤',
+      icon: '▤',
     },
     {
       label: 'Verification',
       to: '/patient/verification',
-      icon: 'âœ“',
+      icon: '✓',
     },
   ]
 
@@ -39,17 +39,17 @@ function Sidebar({ mobileOpen, onClose }) {
     {
       label: 'Dashboard',
       to: '/doctor/dashboard',
-      icon: 'âŒ‚',
+      icon: '⌂',
     },
     {
       label: 'Appointments',
       to: '/doctor/appointments',
-      icon: 'â–£',
+      icon: '▣',
     },
     {
       label: 'Waiting Queue',
       to: '/doctor/waiting-queue',
-      icon: 'â˜·',
+      icon: '☷',
     },
   ]
 
@@ -57,7 +57,7 @@ function Sidebar({ mobileOpen, onClose }) {
     {
       label: 'Medical Records',
       to: '/doctor/medical-records',
-      icon: 'â–¤',
+      icon: '▤',
     },
   ]
 
@@ -65,7 +65,7 @@ function Sidebar({ mobileOpen, onClose }) {
     {
       label: 'My Profile',
       to: '/doctor/profile',
-      icon: 'â—‰',
+      icon: '◉',
     },
   ]
 
@@ -73,12 +73,12 @@ function Sidebar({ mobileOpen, onClose }) {
     {
       label: 'Dashboard',
       to: '/receptionist/dashboard',
-      icon: 'âŒ‚',
+      icon: '⌂',
     },
     {
       label: 'Appointments',
       to: '/receptionist/appointments',
-      icon: 'â–£',
+      icon: '▣',
     },
   ]
 
@@ -86,17 +86,17 @@ function Sidebar({ mobileOpen, onClose }) {
     {
       label: 'Dashboard',
       to: '/admin/dashboard',
-      icon: 'âŒ‚',
+      icon: '⌂',
     },
     {
       label: 'Doctors',
       to: '/admin/doctors',
-      icon: 'âš•',
+      icon: '⚕',
     },
     {
       label: 'Departments',
       to: '/admin/departments',
-      icon: 'â–¦',
+      icon: '▦',
     },
   ]
 
@@ -104,17 +104,17 @@ function Sidebar({ mobileOpen, onClose }) {
     {
       label: 'Dashboard',
       to: '/super-admin/dashboard',
-      icon: 'âŒ‚',
+      icon: '⌂',
     },
     {
       label: 'Hospitals',
       to: '/super-admin/hospitals',
-      icon: 'â–£',
+      icon: '▣',
     },
     {
       label: 'Hospital Administrators',
       to: '/super-admin/hospital-admins',
-      icon: 'ðŸ‘¤',
+      icon: '👤',
     },
   ]
 

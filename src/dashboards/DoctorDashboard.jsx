@@ -55,7 +55,7 @@ function DoctorDashboard() {
 
   if (loading) {
     return (
-      <div className="flex min-h-full items-center justify-center p-6 bg-slate-50">
+      <div className="flex min-h-full items-center justify-center bg-slate-50 p-6">
         <p className="text-lg text-slate-600">
           Loading doctor dashboard...
         </p>
@@ -99,7 +99,7 @@ function DoctorDashboard() {
           </Link>
 
           <Link
-            to="/doctor/waiting"
+            to="/doctor/waiting-queue"
             className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-slate-200 hover:shadow-md"
           >
             <h2 className="text-lg font-bold text-slate-900">
@@ -257,19 +257,19 @@ function DoctorDashboard() {
                     >
 
                       <td className="px-4 py-4 font-medium text-slate-900">
-                        {appointment.patientName || 'â€”'}
+                        {appointment.patientName || '\u2014'}
                       </td>
 
                       <td className="px-4 py-4 text-slate-600">
-                        {appointment.appointmentDate || 'â€”'}
+                        {appointment.appointmentDate || '\u2014'}
                       </td>
 
                       <td className="px-4 py-4 text-slate-600">
-                        {appointment.appointmentTime || 'â€”'}
+                        {appointment.appointmentTime || '\u2014'}
                       </td>
 
                       <td className="px-4 py-4 text-slate-600">
-                        {appointment.reason || 'â€”'}
+                        {appointment.reason || '\u2014'}
                       </td>
 
                       <td className="px-4 py-4">

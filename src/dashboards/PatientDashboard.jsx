@@ -306,7 +306,7 @@ function PatientDashboard() {
               className="text-sm font-bold text-red-600 hover:text-red-800"
               aria-label="Dismiss error"
             >
-              âœ•
+              &#x2715;
             </button>
           </div>
         )}
@@ -331,7 +331,7 @@ function PatientDashboard() {
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-slate-200 hover:shadow-md"
             >
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-blue-100 text-xl text-blue-700">
-                âš•
+                &#x2695;
               </div>
 
               <h3 className="font-bold text-slate-900">
@@ -343,7 +343,7 @@ function PatientDashboard() {
               </p>
 
               <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Find a doctor â†’
+                Find a doctor &#x2192;
               </p>
             </Link>
 
@@ -364,7 +364,7 @@ function PatientDashboard() {
               </p>
 
               <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Book now â†’
+                Book now &#x2192;
               </p>
             </Link>
 
@@ -373,7 +373,7 @@ function PatientDashboard() {
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
             >
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-purple-100 text-xl text-purple-700">
-                â–£
+                &#x25A3;
               </div>
 
               <h3 className="font-bold text-slate-900">
@@ -385,7 +385,7 @@ function PatientDashboard() {
               </p>
 
               <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                View appointments â†’
+                View appointments &#x2192;
               </p>
             </Link>
 
@@ -394,7 +394,7 @@ function PatientDashboard() {
               className="group rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:border-blue-200 hover:shadow-md"
             >
               <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-100 text-xl text-indigo-700">
-                âœ“
+                &#x2713;
               </div>
 
               <h3 className="font-bold text-slate-900">
@@ -406,7 +406,7 @@ function PatientDashboard() {
               </p>
 
               <p className="mt-4 text-sm font-semibold text-blue-600 group-hover:text-blue-700">
-                Verify details â†’
+                Verify details &#x2192;
               </p>
             </Link>
 
@@ -491,7 +491,7 @@ function PatientDashboard() {
                 to="/patient/appointments"
                 className="text-sm font-semibold text-blue-600 hover:text-blue-700"
               >
-                View all appointments â†’
+                View all appointments &#x2192;
               </Link>
 
             </div>
@@ -541,7 +541,7 @@ function PatientDashboard() {
             <div className="p-8 text-center sm:p-12">
 
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-2xl">
-                â–£
+                &#x25A3;
               </div>
 
               <h3 className="mt-4 font-semibold text-slate-900">
@@ -626,13 +626,13 @@ function PatientDashboard() {
                         {/* DATE */}
 
                         <td className="px-5 py-4 text-sm text-slate-600">
-                          {appointment.appointmentDate || 'â€”'}
+                          {appointment.appointmentDate || '\u2014'}
                         </td>
 
                         {/* TIME */}
 
                         <td className="px-5 py-4 text-sm text-slate-600">
-                          {appointment.appointmentTime || 'â€”'}
+                          {appointment.appointmentTime || '\u2014'}
                         </td>
 
                         {/* STATUS */}

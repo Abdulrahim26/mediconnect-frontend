@@ -302,7 +302,7 @@ function ReceptionistDashboard() {
           </h1>
 
           <p className="mt-2 text-slate-600">
-            {dashboard?.hospitalName || 'Hospital'} Â· Search, filter and check in patients.
+            {dashboard?.hospitalName || 'Hospital'} {'\u00B7'} Search, filter and check in patients.
           </p>
         </section>
 
@@ -583,19 +583,19 @@ function ReceptionistDashboard() {
                       >
 
                         <td className="px-4 py-4 font-medium text-slate-900">
-                          {appointment.patientName || 'â€”'}
+                          {appointment.patientName || '\u2014'}
                         </td>
 
                         <td className="px-4 py-4 text-slate-600">
-                          {appointment.doctorName || 'â€”'}
+                          {appointment.doctorName || '\u2014'}
                         </td>
 
                         <td className="px-4 py-4 text-slate-600">
-                          {appointment.appointmentDate || 'â€”'}
+                          {appointment.appointmentDate || '\u2014'}
                         </td>
 
                         <td className="px-4 py-4 text-slate-600">
-                          {appointment.appointmentTime || 'â€”'}
+                          {appointment.appointmentTime || '\u2014'}
                         </td>
 
                         <td className="px-4 py-4">
@@ -622,7 +622,7 @@ function ReceptionistDashboard() {
                         </td>
 
                         <td className="max-w-xs px-4 py-4 text-slate-600">
-                          {appointment.reason || 'â€”'}
+                          {appointment.reason || '\u2014'}
                         </td>
 
                         <td className="px-4 py-4">
@@ -657,7 +657,7 @@ function ReceptionistDashboard() {
                             </span>
                           ) : (
                             <span className="text-sm text-slate-400">
-                              â€”
+                              {'\u2014'}
                             </span>
                           )}
 
@@ -683,3 +683,4 @@ function ReceptionistDashboard() {
 }
 
 export default ReceptionistDashboard
+

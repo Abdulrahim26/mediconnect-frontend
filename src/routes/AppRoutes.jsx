@@ -179,7 +179,7 @@ function AppRoutes() {
           />
 
           <Route
-            path="/doctor/waiting"
+            path="/doctor/waiting-queue"
             element={<DoctorWaitingQueue />}
           />
 
