@@ -39,6 +39,7 @@ import EditMedicalRecord from '../pages/doctor/EditMedicalRecord'
 
 import AdminDoctors from '../pages/admin/Doctors'
 import AdminDepartments from '../pages/admin/AdminDepartments'
+import AdminReceptionists from '../pages/admin/AdminReceptionists'
 
 import Hospitals from '../pages/super-admin/Hospitals'
 import CreateHospital from '../pages/super-admin/CreateHospital'
@@ -257,6 +258,11 @@ function AppRoutes() {
           <Route
             path="/admin/departments"
             element={<AdminDepartments />}
+          />
+
+          <Route
+            path="/admin/receptionists"
+            element={<AdminReceptionists />}
           />
 
         </Route>
